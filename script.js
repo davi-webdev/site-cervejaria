@@ -579,7 +579,8 @@ function iniciar() {
 
 /* ----- CONFIGURAÇÃO: troque aqui pra cada cliente ----- */
 const LOJA = {
-  // WhatsApp da cervejaria: 55 + DDD + número, só números
+  // NÚMERO FICTÍCIO: 5500000000000 não existe, é só para fins de portfólio.
+  // Num negócio real: 55 + DDD + número, só números
   whatsapp: "5500000000000",
   // Fuso horário da cervejaria: o "aberto/fechado" usa o relógio
   // DELA, não o de quem está visitando o site
