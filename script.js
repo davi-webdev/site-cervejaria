@@ -1,70 +1,87 @@
 /* ==========================================================
    script.js – animação de rolagem da Cervejaria Correnteza
+   Versão 2: as cenas se misturam umas nas outras (crossfade)
+   e os vídeos tocam sozinhos quando a cena aparece.
    Usa a biblioteca GSAP com o plugin ScrollTrigger.
    ========================================================== */
 
+const cenas = Array.from(document.querySelectorAll(".cena"));
+const videos = cenas.map(function (cena) {
+  return cena.querySelector(".cena__video");
+});
+
 
 /* ----------------------------------------------------------
-   0. SEGURANÇA
-   Se a internet falhar e o GSAP não carregar, o site não pode
-   quebrar. Então a gente só mostra tudo parado e para aqui.
+   1. PREPARAR OS VÍDEOS
+   Isso roda mesmo se o GSAP não carregar, pra o vídeo nunca
+   depender da animação.
+   - muted e playsInline: sem isso o celular bloqueia o play
+   - se o vídeo der erro, a cena ganha "sem-video" e o CSS
+     mostra o degradê no lugar
    ---------------------------------------------------------- */
+videos.forEach(function (video, i) {
+  if (!video) return;
+  video.muted = true;
+  video.playsInline = true;
+
+  function semVideo() {
+    cenas[i].classList.add("sem-video");
+  }
+  if (video.error) semVideo();
+  video.addEventListener("error", semVideo);
+});
+
+// Toca só os vídeos da lista e pausa o resto (economiza bateria)
+function tocarSomente(indices) {
+  videos.forEach(function (video, i) {
+    if (!video) return;
+    if (indices.indexOf(i) !== -1) {
+      if (video.paused) video.play().catch(function () {});
+    } else if (!video.paused) {
+      video.pause();
+    }
+  });
+}
+
+
+/* ----------------------------------------------------------
+   2. SEM GSAP OU COM "REDUZIR MOVIMENTO"
+   As cenas ficam uma embaixo da outra, sem animação, e cada
+   vídeo toca quando aparece na tela.
+   ---------------------------------------------------------- */
+function modoSimples() {
+  if (!("IntersectionObserver" in window)) {
+    tocarSomente(videos.map(function (_, i) { return i; }));
+    return;
+  }
+  const observador = new IntersectionObserver(function (entradas) {
+    entradas.forEach(function (entrada) {
+      const video = entrada.target.querySelector(".cena__video");
+      if (!video) return;
+      if (entrada.isIntersecting) video.play().catch(function () {});
+      else video.pause();
+    });
+  }, { threshold: 0.25 });
+  cenas.forEach(function (cena) { observador.observe(cena); });
+}
+
 if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
   console.warn("GSAP não carregou. O site vai funcionar sem animação.");
+  modoSimples();
 } else {
   iniciar();
 }
 
 
 function iniciar() {
-  // Avisa o GSAP que a gente vai usar o plugin de rolagem
   gsap.registerPlugin(ScrollTrigger);
 
-  // Pega da página tudo que o script vai controlar
-  const cenas = document.querySelectorAll(".cena");
   const barra = document.querySelector(".progresso__barra");
   const elementosQueSurgem = document.querySelectorAll(".surgir");
 
 
   /* --------------------------------------------------------
-     1. VÍDEOS
-     - Se o vídeo não existir ou der erro, a cena ganha a
-       classe "sem-video" (o CSS mostra um degradê no lugar).
-     - O vídeo só toca quando a cena está na tela. Fora dela,
-       pausa. Isso economiza bateria e internet no celular.
-     -------------------------------------------------------- */
-  cenas.forEach(function (cena) {
-    const video = cena.querySelector(".cena__video");
-    if (!video) return;
-
-    function semVideo() {
-      cena.classList.add("sem-video");
-    }
-
-    // O erro pode ter acontecido antes do script rodar, então confere já
-    if (video.error) semVideo();
-    video.addEventListener("error", semVideo);
-
-    ScrollTrigger.create({
-      trigger: cena,
-      start: "top bottom", // quando o topo da cena encosta no fim da tela
-      end: "bottom top",   // até o fim da cena sair pelo topo
-      onToggle: function (estado) {
-        if (estado.isActive) {
-          // .catch evita erro no console quando o navegador bloqueia o play
-          video.play().catch(function () {});
-        } else {
-          video.pause();
-        }
-      }
-    });
-  });
-
-
-  /* --------------------------------------------------------
-     2. BARRA DE PROGRESSO
-     Vai de 0% a 100% de largura conforme a pessoa rola a
-     página do começo ao fim.
+     3. BARRA DE PROGRESSO
      -------------------------------------------------------- */
   if (barra) {
     gsap.to(barra, {
@@ -74,95 +91,127 @@ function iniciar() {
         trigger: document.body,
         start: "top top",
         end: "bottom bottom",
-        scrub: true // "scrub" = a animação segue o dedo/rodinha do mouse
+        scrub: true
       }
     });
   }
 
 
-  /* --------------------------------------------------------
-     3. ANIMAÇÕES
-     matchMedia deixa a gente ter duas versões:
-     - uma pra quem aceita movimento (a maioria)
-     - outra pra quem ativou "reduzir movimento" no celular/PC
-       (gente que passa mal com animação). Pra essa, tudo
-       aparece direto, sem efeito.
-     -------------------------------------------------------- */
   const mm = gsap.matchMedia();
 
+  // Quem ativou "reduzir movimento" no aparelho vê a versão simples
+  mm.add("(prefers-reduced-motion: reduce)", function () {
+    modoSimples();
+  });
+
   mm.add("(prefers-reduced-motion: no-preference)", function () {
+    if (cenas.length === 0) return;
 
-    /* 3a. CENAS: cada cena "gruda" na tela (pin) enquanto a
-       pessoa rola, e dentro dela acontece uma mini história:
-       o vídeo faz um zoom lento, o texto entra e depois sai. */
-    cenas.forEach(function (cena, posicao) {
-      const video = cena.querySelector(".cena__video");
-      const texto = cena.querySelector(".cena__texto");
-      const ehUltima = posicao === cenas.length - 1;
+    /* ------------------------------------------------------
+       4. O PALCO
+       Em vez de uma cena embaixo da outra, a gente empilha
+       as 4 cenas no mesmo lugar, dentro de um "palco" que
+       fica grudado na tela. Aí a rolagem só troca qual cena
+       está visível, misturando uma na outra. É isso que deixa
+       a transição suave, sem "corte" entre as cenas.
+       ------------------------------------------------------ */
+    const palco = document.createElement("div");
+    palco.className = "palco";
+    cenas[0].parentNode.insertBefore(palco, cenas[0]);
+    cenas.forEach(function (cena) { palco.appendChild(cena); });
 
-      // Uma "linha do tempo" é uma fila de animações em sequência
-      const linhaDoTempo = gsap.timeline({
-        scrollTrigger: {
-          trigger: cena,
-          start: "top top",   // começa quando a cena encosta no topo
-          end: "+=100%",      // dura uma tela inteira de rolagem
-          pin: true,          // segura a cena parada enquanto isso
-          scrub: 0.6          // segue a rolagem, com um leve atraso suave
-        }
-      });
+    gsap.set(palco, { position: "relative", height: "100svh", overflow: "hidden" });
+    gsap.set(cenas, { position: "absolute", inset: 0, height: "100%" });
+    // Todas começam invisíveis, menos a primeira
+    gsap.set(cenas.slice(1), { autoAlpha: 0 });
 
-      // Zoom lento no vídeo durante toda a cena
-      if (video) {
-        linhaDoTempo.fromTo(video,
-          { scale: 1.15 },
-          { scale: 1, ease: "none", duration: 1 },
-          0 // o 0 faz começar junto com o início da linha do tempo
-        );
-      }
+    const textos = cenas.map(function (c) { return c.querySelector(".cena__texto"); });
 
-      if (texto) {
-        // Texto entra de baixo pra cima
-        linhaDoTempo.fromTo(texto,
-          { opacity: 0, y: 60 },
-          { opacity: 1, y: 0, ease: "power2.out", duration: 0.35 },
-          0
-        );
-
-        // Texto sai pra cima (menos na última cena, que fica até o fim)
-        if (!ehUltima) {
-          linhaDoTempo.to(texto,
-            { opacity: 0, y: -60, ease: "power2.in", duration: 0.3 },
-            0.7 // começa quando 70% da cena já passou
-          );
+    /* ------------------------------------------------------
+       5. A LINHA DO TEMPO
+       Cada cena ganha 1 "unidade" de tempo. A rolagem inteira
+       do palco corresponde à linha do tempo inteira.
+       ------------------------------------------------------ */
+    const linhaDoTempo = gsap.timeline({
+      defaults: { ease: "none" },
+      scrollTrigger: {
+        trigger: palco,
+        start: "top top",
+        end: "+=" + cenas.length * 100 + "%", // 1 tela de rolagem por cena
+        pin: true,
+        scrub: 1, // segue a rolagem com 1 segundo de suavidade
+        onUpdate: function (estado) {
+          // Descobre em qual cena a gente está e toca ela e a próxima
+          const posicao = estado.progress * cenas.length;
+          const atual = Math.min(cenas.length - 1, Math.floor(posicao));
+          tocarSomente([atual, atual + 1]);
         }
       }
     });
 
-    /* 3b. ELEMENTOS QUE SURGEM: os cards das cervejas e o
-       contato aparecem suavemente quando entram na tela.
-       Acontece uma vez só (once), não fica repetindo. */
+    cenas.forEach(function (cena, i) {
+      const video = videos[i];
+      const texto = textos[i];
+      const inicio = i; // cada cena começa na unidade i
+
+      // Zoom lento no vídeo durante a cena inteira (e um pouco além)
+      if (video) {
+        linhaDoTempo.fromTo(video, { scale: 1.12 }, { scale: 1, duration: 1.4 }, Math.max(0, inicio - 0.3));
+      }
+
+      // Texto entra (a primeira cena já começa com o texto na tela)
+      if (texto && i > 0) {
+        linhaDoTempo.fromTo(texto,
+          { autoAlpha: 0, y: 50 },
+          { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" },
+          inicio + 0.05
+        );
+      }
+
+      // Se não for a última cena: texto sai e a próxima cena aparece por cima
+      if (i < cenas.length - 1) {
+        if (texto) {
+          linhaDoTempo.to(texto,
+            { autoAlpha: 0, y: -50, duration: 0.25, ease: "power2.in" },
+            inicio + 0.65
+          );
+        }
+        // O CROSSFADE: a próxima cena surge suavemente por cima desta
+        linhaDoTempo.to(cenas[i + 1], { autoAlpha: 1, duration: 0.35, ease: "power1.inOut" }, inicio + 0.75);
+      }
+    });
+
+    // Garante que a linha do tempo tenha exatamente o tamanho certo
+    linhaDoTempo.set({}, {}, cenas.length);
+
+    // Começa tocando o primeiro vídeo
+    tocarSomente([0, 1]);
+
+    // Quando a pessoa sair do modo animado, desfaz o palco
+    return function () {
+      cenas.forEach(function (cena) { palco.parentNode.insertBefore(cena, palco); });
+      palco.remove();
+    };
+  });
+
+
+  /* --------------------------------------------------------
+     6. ELEMENTOS QUE SURGEM (cards e contato)
+     -------------------------------------------------------- */
+  mm.add("(prefers-reduced-motion: no-preference)", function () {
     elementosQueSurgem.forEach(function (elemento) {
       gsap.from(elemento, {
         opacity: 0,
         y: 40,
         duration: 0.8,
         ease: "power2.out",
-        scrollTrigger: {
-          trigger: elemento,
-          start: "top 85%", // quando o topo dele chega em 85% da altura da tela
-          once: true
-        }
+        scrollTrigger: { trigger: elemento, start: "top 85%", once: true }
       });
     });
   });
 
 
-  /* --------------------------------------------------------
-     4. AJUSTE FINAL
-     Quando os vídeos e as fontes terminam de carregar, o
-     tamanho das coisas pode mudar um pouco. Aí a gente pede
-     pro ScrollTrigger recalcular as posições.
-     -------------------------------------------------------- */
+  // Recalcula as posições quando tudo terminar de carregar
   window.addEventListener("load", function () {
     ScrollTrigger.refresh();
   });
