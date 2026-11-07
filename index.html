@@ -79,6 +79,23 @@
           <path d="M100 124 C 92 118 86 122 84 128 M100 124 C 108 118 114 122 116 128" fill="none" stroke="#f0c063" stroke-width="1.6" stroke-linecap="round"/>
         </g>
       </symbol>
+      <!-- versão pequena do selo, sem os textos em volta: usada no topo, onde o selo tem só 40 px -->
+      <symbol id="selo-mini" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="94" fill="#140d07" stroke="#f0c063" stroke-width="8"/>
+        <circle cx="100" cy="100" r="70" fill="none" stroke="#f0c063" stroke-width="4"/>
+        <!-- ramo de cevada no centro -->
+        <g fill="#f0c063">
+          <path d="M100 140 L100 66" stroke="#f0c063" stroke-width="2" stroke-linecap="round"/>
+          <ellipse cx="100" cy="64" rx="3.6" ry="7.5"/>
+          <ellipse cx="94" cy="78" rx="3.6" ry="7.5" transform="rotate(-28 94 78)"/>
+          <ellipse cx="106" cy="78" rx="3.6" ry="7.5" transform="rotate(28 106 78)"/>
+          <ellipse cx="94" cy="93" rx="3.6" ry="7.5" transform="rotate(-28 94 93)"/>
+          <ellipse cx="106" cy="93" rx="3.6" ry="7.5" transform="rotate(28 106 93)"/>
+          <ellipse cx="94" cy="108" rx="3.6" ry="7.5" transform="rotate(-28 94 108)"/>
+          <ellipse cx="106" cy="108" rx="3.6" ry="7.5" transform="rotate(28 106 108)"/>
+          <path d="M100 124 C 92 118 86 122 84 128 M100 124 C 108 118 114 122 116 128" fill="none" stroke="#f0c063" stroke-width="1.6" stroke-linecap="round"/>
+        </g>
+      </symbol>
     </defs>
   </svg>
 
@@ -192,7 +209,7 @@
        ===================================================== -->
   <header class="topo">
     <a href="#inicio" class="topo__logo" aria-label="Feierabend, cervejaria artesanal: voltar ao início">
-      <svg class="topo__selo" aria-hidden="true"><use href="#selo"/></svg>
+      <svg class="topo__selo" aria-hidden="true"><use href="#selo-mini"/></svg>
       <span class="topo__marca">
         Feierabend
         <span class="topo__logo-sub">Cervejaria Artesanal</span>

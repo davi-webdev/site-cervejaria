@@ -382,7 +382,8 @@ a {
   margin-bottom: 20px;
   border-top: 10px solid #fff1d6;  /* espuma */
   border-radius: 4px 4px 12px 12px;
-  background: linear-gradient(180deg, var(--cor-cerveja), color-mix(in srgb, var(--cor-cerveja) 70%, #000));
+  /* sombra por cima da cor da cerveja (funciona em qualquer navegador, sem color-mix) */
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)), var(--cor-cerveja);
   box-shadow: 0 0 0 1px rgba(255, 241, 214, 0.25);
 }
 
@@ -1537,7 +1538,8 @@ a {
     radial-gradient(circle at 30% 70%, rgba(255, 241, 214, 0.55) 0 1px, transparent 1.6px),
     radial-gradient(circle at 70% 40%, rgba(255, 241, 214, 0.45) 0 1px, transparent 1.6px),
     radial-gradient(circle at 50% 90%, rgba(255, 241, 214, 0.4) 0 0.8px, transparent 1.4px),
-    linear-gradient(180deg, var(--cor-cerveja), color-mix(in srgb, var(--cor-cerveja) 70%, #000));
+    linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)),
+    var(--cor-cerveja);
   background-size: 14px 18px, 16px 22px, 12px 14px, 100% 100%;
   transition: height 0.9s cubic-bezier(0.25, 0.8, 0.3, 1);
 }
@@ -1570,7 +1572,7 @@ a {
   height: calc((1 - var(--enchimento)) * 100% + 4px);  /* vai do topo até o chope */
   margin-left: -2px;
   border-radius: 2px;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--cor-cerveja) 80%, #fff), var(--cor-cerveja));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0)), var(--cor-cerveja);
   transform: scaleY(0);
   transform-origin: 50% 0%;
   opacity: 0;
