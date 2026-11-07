@@ -405,13 +405,24 @@
       <div class="cardapio__painel" role="tabpanel" id="painel-levar" aria-labelledby="aba-levar" hidden>
         <div class="cervejas__lista cervejas__lista--4">
         <article class="cerveja produto">
-          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
-              <path d="M33 26c7 0 7 13 0 13" fill="none" stroke="rgba(255,241,214,0.55)" stroke-width="2.5" stroke-linecap="round"/>
-              <rect x="13" y="30" width="18" height="23" rx="3" fill="#c8741e"/>
-              <rect x="13" y="27" width="18" height="5" rx="2" fill="#fff1d6"/>
-              <path d="M17 5h10v7c0 3 6 5 6 12v28a4 4 0 0 1-4 4H15a4 4 0 0 1-4-4V24c0-7 6-9 6-12Z" fill="none" stroke="rgba(255,241,214,0.6)" stroke-width="2"/>
-              <rect x="16" y="2" width="12" height="5" rx="1.5" fill="#6b4423"/>
-            </svg>
+          <!-- Ícones dos produtos (Pra levar e Petiscos): desenhados numa grade de 120x120,
+               que aparece com 60x60 px. Traço dourado de 1,6 px, igual ao do selo. -->
+          <svg class="produto__icone" viewBox="0 0 120 120" aria-hidden="true">
+            <path d="M24 24V40C24 49 3 52 3 66V110Q3 117 10 117H52Q59 117 59 110V66C59 52 38 49 38 40V24Z" fill="rgba(255,241,214,0.06)"/>
+            <path d="M3 69H59V110Q59 117 52 117H10Q3 117 3 110Z" fill="#c8741e"/>
+            <path d="M3 66H59V70H3Z" fill="#f6ead4"/>
+            <rect x="10" y="80" width="42" height="23" rx="2.5" fill="#f6ead4"/>
+            <path d="M18 88H44M22 95H40" stroke="#6b4423" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M7.5 74V108" stroke="rgba(255,241,214,0.35)" stroke-width="2.2" stroke-linecap="round"/>
+            <g fill="none" stroke="#f0c063" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M24 24V40C24 49 3 52 3 66V110Q3 117 10 117H52Q59 117 59 110V66C59 52 38 49 38 40V24"/>
+            <path d="M38 30C50 29 60 35 59.5 44C59.2 49 57 52.5 53.5 54.5"/>
+            <rect x="22" y="22" width="18" height="6" rx="2" fill="#2a1c10"/>
+            <path d="M26.5 17 22.5 31.5M35.5 17 39.5 31.5M22.5 31.5H39.5" stroke-width="2"/>
+            </g>
+            <rect x="25" y="10" width="12" height="9.5" rx="3.6" fill="#f6ead4" stroke="#f0c063" stroke-width="3.2"/>
+            <path d="M26 21.2H36" stroke="#c8741e" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
           <span class="cerveja__estilo">Refil · 1 litro</span>
           <h3 class="cerveja__nome">Growler</h3>
           <p class="cerveja__descricao">Garrafa retornável de 1 litro, enchida na hora direto da torneira. Sai mais barato que levar 2 garrafas de 500 ml.</p>
@@ -434,12 +445,23 @@
         </article>
 
         <article class="cerveja produto">
-          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
-              <rect x="7" y="10" width="4" height="10" rx="1" fill="#6b4423"/><rect x="4" y="19" width="10" height="34" rx="3" fill="#f2c24e"/>
-              <rect x="20" y="6" width="4" height="10" rx="1" fill="#6b4423"/><rect x="17" y="15" width="10" height="38" rx="3" fill="#c8741e"/>
-              <rect x="33" y="10" width="4" height="10" rx="1" fill="#6b4423"/><rect x="30" y="19" width="10" height="34" rx="3" fill="#2b160b" stroke="rgba(255,241,214,0.35)"/>
-              <rect x="2" y="44" width="40" height="13" rx="2" fill="#6b4423"/>
-            </svg>
+          <svg class="produto__icone" viewBox="0 0 120 120" aria-hidden="true">
+            <path d="M18.2 10H25.8L26.4 34C26.4 42 32 44 32 53V112H12V53C12 44 17.6 42 17.6 34Z" fill="#f2c24e" stroke="#f0c063" stroke-width="3.2" stroke-linejoin="round"/>
+            <rect x="13.6" y="58" width="16.8" height="14" fill="#f6ead4"/>
+            <path d="M18 65H26" stroke="#6b4423" stroke-width="2.6" stroke-linecap="round"/>
+            <rect x="16.8" y="4.5" width="10.4" height="6.5" rx="1.5" fill="#f0c063" stroke="#f0c063" stroke-width="2"/>
+            <path d="M44.2 10H51.8L52.4 34C52.4 42 58 44 58 53V112H38V53C38 44 43.6 42 43.6 34Z" fill="#c8741e" stroke="#f0c063" stroke-width="3.2" stroke-linejoin="round"/>
+            <rect x="39.6" y="58" width="16.8" height="14" fill="#f6ead4"/>
+            <path d="M44 65H52" stroke="#6b4423" stroke-width="2.6" stroke-linecap="round"/>
+            <rect x="42.8" y="4.5" width="10.4" height="6.5" rx="1.5" fill="#f0c063" stroke="#f0c063" stroke-width="2"/>
+            <path d="M70.2 10H77.8L78.4 34C78.4 42 84 44 84 53V112H64V53C64 44 69.6 42 69.6 34Z" fill="#2b160b" stroke="#f0c063" stroke-width="3.2" stroke-linejoin="round"/>
+            <rect x="65.6" y="58" width="16.8" height="14" fill="#f6ead4"/>
+            <path d="M70 65H78" stroke="#6b4423" stroke-width="2.6" stroke-linecap="round"/>
+            <rect x="68.8" y="4.5" width="10.4" height="6.5" rx="1.5" fill="#f0c063" stroke="#f0c063" stroke-width="2"/>
+            <rect x="3" y="78" width="90" height="39" rx="2.5" fill="#6b4423" stroke="#f0c063" stroke-width="3.2"/>
+            <path d="M5 91H91M5 104H91" stroke="#4a2e17" stroke-width="2"/>
+            <path d="M10 84.5V84.6M86 84.5V84.6M10 97.5V97.6M86 97.5V97.6M10 110.5V110.6M86 110.5V110.6" stroke="#c9a06a" stroke-width="2.6" stroke-linecap="round"/>
+          </svg>
           <span class="cerveja__estilo">Presente · 3 garrafas</span>
           <h3 class="cerveja__nome">Kit degustação</h3>
           <p class="cerveja__descricao">Uma Remanso, uma Cheia e uma Foz numa caixinha de madeira. Sai mais barato que comprar as três separadas.</p>
@@ -456,12 +478,19 @@
         </article>
 
         <article class="cerveja produto">
-          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
-              <rect x="9" y="10" width="5" height="16" rx="1.5" fill="#c8741e"/><rect x="19.5" y="8" width="5" height="18" rx="1.5" fill="#f2c24e"/><rect x="30" y="10" width="5" height="16" rx="1.5" fill="#c8741e"/>
-              <rect x="3" y="24" width="38" height="31" rx="3" fill="#6b4423" stroke="rgba(255,241,214,0.4)"/>
-              <path d="M3 32h38" stroke="rgba(255,241,214,0.3)"/>
-              <text x="22" y="47" fill="#f0c063" font-family="DM Sans, sans-serif" font-weight="700" font-size="11" text-anchor="middle">6x</text>
-            </svg>
+          <svg class="produto__icone" viewBox="0 0 120 120" aria-hidden="true">
+            <path d="M9 78V46C9 40.5 12.5 38 18 38H36C40 38 42.5 30.5 48 30.5C53.5 30.5 56 38 60 38H78C83.5 38 87 40.5 87 46V78Z" fill="#5a3a1f" stroke="#f0c063" stroke-width="3.2" stroke-linejoin="round"/>
+            <rect x="40.5" y="35" width="15" height="7" rx="3.5" fill="#2a1c10" stroke="#f0c063" stroke-width="2.4"/>
+            <path d="M18.2 55H25.8L26.4 65C26.4 69 31 71 31 75V90H13V75C13 71 17.6 69 17.6 65Z" fill="#8a4b1f" stroke="#f0c063" stroke-width="3.2" stroke-linejoin="round"/>
+            <rect x="16.8" y="49" width="10.4" height="6.5" rx="1.5" fill="#f2c24e" stroke="#f0c063" stroke-width="2"/>
+            <path d="M44.2 55H51.8L52.4 65C52.4 69 57 71 57 75V90H39V75C39 71 43.6 69 43.6 65Z" fill="#8a4b1f" stroke="#f0c063" stroke-width="3.2" stroke-linejoin="round"/>
+            <rect x="42.8" y="49" width="10.4" height="6.5" rx="1.5" fill="#c8741e" stroke="#f0c063" stroke-width="2"/>
+            <path d="M70.2 55H77.8L78.4 65C78.4 69 83 71 83 75V90H65V75C65 71 69.6 69 69.6 65Z" fill="#8a4b1f" stroke="#f0c063" stroke-width="3.2" stroke-linejoin="round"/>
+            <rect x="68.8" y="49" width="10.4" height="6.5" rx="1.5" fill="#f6ead4" stroke="#f0c063" stroke-width="2"/>
+            <rect x="3" y="76" width="90" height="41" rx="2.5" fill="#6b4423" stroke="#f0c063" stroke-width="3.2"/>
+            <circle cx="48" cy="96.5" r="10" fill="none" stroke="#f0c063" stroke-width="2"/>
+            <path d="M48 102.5V90.5M48 91.5l-2.8-2.4M48 91.5l2.8-2.4M48 95.2l-2.8-2.4M48 95.2l2.8-2.4M48 98.9l-2.8-2.4M48 98.9l2.8-2.4" stroke="#f0c063" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
           <span class="cerveja__estilo">Mix · 6 garrafas</span>
           <h3 class="cerveja__nome">Caixa com 6</h3>
           <p class="cerveja__descricao">Duas de cada rótulo, mais barato que comprar separado. Pra geladeira nunca ficar vazia no fim de semana.</p>
@@ -477,11 +506,22 @@
         </article>
 
         <article class="cerveja produto">
-          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
-              <path d="M10 6h24c5 9 5 39 0 48H10C5 45 5 15 10 6Z" fill="#6b4423" stroke="rgba(255,241,214,0.45)" stroke-width="1.5"/>
-              <path d="M7.5 16h29M6.5 30h31M7.5 44h29" stroke="#f0c063" stroke-width="2.5"/>
-              <path d="M17 6c-2 9-2 39 0 48M27 6c2 9 2 39 0 48" stroke="rgba(0,0,0,0.25)" stroke-width="1.2" fill="none"/>
-            </svg>
+          <svg class="produto__icone" viewBox="0 0 120 120" aria-hidden="true">
+            <path d="M7 48C4 66 4 90 7 108H67C70 90 70 66 67 48Z" fill="rgba(255,241,214,0.13)"/>
+            <path d="M58.5 49C61 66 61 90 58.5 107H67C69.6 90 69.6 66 67 49Z" fill="rgba(0,0,0,0.2)"/>
+            <path d="M16 51V58.5M16 68V89M16 97.5V104.5" stroke="rgba(255,241,214,0.38)" stroke-width="3.4" stroke-linecap="round"/>
+            <g stroke="#f0c063" stroke-width="3.2" stroke-linejoin="round">
+            <path d="M7 48C4 66 4 90 7 108M67 48C70 66 70 90 67 108" fill="none"/>
+            <rect x="9" y="28" width="56" height="20" rx="4" fill="rgba(255,241,214,0.2)"/>
+            <rect x="3.5" y="60" width="67" height="5.5" rx="2.75" fill="rgba(255,241,214,0.2)" stroke-width="2.6"/>
+            <rect x="3.5" y="91" width="67" height="5.5" rx="2.75" fill="rgba(255,241,214,0.2)" stroke-width="2.6"/>
+            <rect x="9" y="107" width="56" height="10" rx="2.5" fill="rgba(255,241,214,0.2)"/>
+            <rect x="31" y="21.5" width="12" height="7" rx="1.5" fill="rgba(255,241,214,0.2)" stroke-width="2.4"/>
+            <rect x="28.5" y="17" width="17" height="5" rx="2.5" fill="rgba(255,241,214,0.2)" stroke-width="2.4"/>
+            <rect x="15.5" y="34" width="14" height="7.5" rx="3.75" fill="#2a1c10" stroke-width="2.4"/>
+            <rect x="44.5" y="34" width="14" height="7.5" rx="3.75" fill="#2a1c10" stroke-width="2.4"/>
+            </g>
+          </svg>
           <span class="cerveja__estilo">Festa · 30 litros</span>
           <h3 class="cerveja__nome">Barril 30 L</h3>
           <p class="cerveja__descricao">Pra aniversário, churrasco e evento, com chopeira emprestada. Encomende com 3 dias de antecedência.</p>
@@ -508,10 +548,35 @@
       <div class="cardapio__painel" role="tabpanel" id="painel-petiscos" aria-labelledby="aba-petiscos" hidden>
         <div class="cervejas__lista cervejas__lista--4">
         <article class="cerveja produto">
-          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
-              <path d="M22 46C10 46 5 36 10 28s15-6 12 6c-3-12 9-14 12-6s-1 18-12 18M14 44l16-16M30 44 14 28" fill="none" stroke="#b5651d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="16" cy="31" r="1" fill="#fff1d6"/><circle cx="28" cy="35" r="1" fill="#fff1d6"/><circle cx="22" cy="43" r="1" fill="#fff1d6"/>
-            </svg>
+          <svg class="produto__icone" viewBox="0 0 120 120" aria-hidden="true">
+            <g transform="translate(1.46 -31.35) scale(1.28)">
+            <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M38 62C34 47 15 45 10 62C5 80 20 108 44 108C68 108 83 80 78 62C73 45 54 47 50 62" stroke="#5c2a0c" stroke-width="12.6"/>
+            <path d="M12 80C16 98 28 108 44 108C60 108 72 98 76 80" stroke="#5c2a0c" stroke-width="14.4"/>
+            <path d="M20 97C27 105 35 108 44 108C53 108 61 105 68 97" stroke="#5c2a0c" stroke-width="16.2"/>
+            <path d="M38 62C34 47 15 45 10 62C5 80 20 108 44 108C68 108 83 80 78 62C73 45 54 47 50 62" stroke="#a8561e" stroke-width="9.2"/>
+            <path d="M12 80C16 98 28 108 44 108C60 108 72 98 76 80" stroke="#a8561e" stroke-width="11"/>
+            <path d="M20 97C27 105 35 108 44 108C53 108 61 105 68 97" stroke="#a8561e" stroke-width="12.8"/>
+            <path d="M23 101C31 106.5 57 106.5 65 101" stroke="#e7b26a" stroke-width="2.4"/>
+            <path d="M38 62C41.6 75.5 50 86 62 98" stroke="#5c2a0c" stroke-width="12.6"/>
+            <path d="M38 62C41.6 75.5 50 86 62 98M37.12 58.7L38.88 65.3" stroke="#a8561e" stroke-width="9.2"/>
+            <path d="M50 62C46.4 75.5 38 86 26 98" stroke="#5c2a0c" stroke-width="12.6"/>
+            <path d="M50 62C46.4 75.5 38 86 26 98M50.88 58.7L49.12 65.3" stroke="#a8561e" stroke-width="9.2"/>
+            </g>
+            <rect x="17.5" y="51.5" width="3" height="3" rx="0.5" transform="rotate(20 19 53)" fill="#f6ead4"/>
+            <rect x="25.5" y="48" width="3" height="3" rx="0.5" transform="rotate(60 27 49.5)" fill="#f6ead4"/>
+            <rect x="60.5" y="48.5" width="3" height="3" rx="0.5" transform="rotate(10 62 50)" fill="#f6ead4"/>
+            <rect x="68.5" y="53" width="3" height="3" rx="0.5" transform="rotate(45 70 54.5)" fill="#f6ead4"/>
+            <rect x="10" y="69.5" width="3" height="3" rx="0.5" transform="rotate(30 11.5 71)" fill="#f6ead4"/>
+            <rect x="75" y="70.5" width="3" height="3" rx="0.5" transform="rotate(70 76.5 72)" fill="#f6ead4"/>
+            <rect x="37.5" y="105" width="3" height="3" rx="0.5" transform="rotate(15 39 106.5)" fill="#f6ead4"/>
+            <rect x="48.5" y="104.5" width="3" height="3" rx="0.5" transform="rotate(55 50 106)" fill="#f6ead4"/>
+            <rect x="29.5" y="83.5" width="3" height="3" rx="0.5" transform="rotate(35 31 85)" fill="#f6ead4"/>
+            <rect x="55.5" y="84.5" width="3" height="3" rx="0.5" transform="rotate(5 57 86)" fill="#f6ead4"/>
+            <rect x="15.5" y="88.5" width="3" height="3" rx="0.5" transform="rotate(25 17 90)" fill="#f6ead4"/>
+            <rect x="69.5" y="89.5" width="3" height="3" rx="0.5" transform="rotate(65 71 91)" fill="#f6ead4"/>
+            </g>
+          </svg>
           <span class="cerveja__estilo">Clássico alemão</span>
           <h3 class="cerveja__nome">Pretzel</h3>
           <p class="cerveja__descricao">Pretzel de verdade, quentinho e com sal grosso, acompanhado da mostarda escura da casa.</p>
@@ -526,11 +591,21 @@
         </article>
 
         <article class="cerveja produto">
-          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
-              <ellipse cx="22" cy="50" rx="19" ry="5" fill="rgba(255,241,214,0.15)"/>
-              <circle cx="13" cy="42" r="8" fill="#d98a2b"/><circle cx="31" cy="42" r="8" fill="#c8741e"/><circle cx="22" cy="31" r="8" fill="#e09a3a"/>
-              <circle cx="10" cy="39" r="2" fill="rgba(255,241,214,0.45)"/><circle cx="28" cy="39" r="2" fill="rgba(255,241,214,0.4)"/><circle cx="19" cy="28" r="2" fill="rgba(255,241,214,0.5)"/>
-            </svg>
+          <svg class="produto__icone" viewBox="0 0 120 120" aria-hidden="true">
+            <g transform="translate(-2.96 -28.87) scale(1.26)">
+            <path d="M36.5 39A12 12 0 0 0 36.5 63ZM51.5 39A12 12 0 0 1 51.5 63Z" fill="#d98a2b" stroke="#7a3f12" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M36.5 43.5C40.5 47.5 47.5 47.5 51.5 43.5V58.5C47.5 55.5 45.6 56 45 59.5Q44 63.5 43 59.5C42.4 56 40.5 55.5 36.5 58.5Z" fill="#f8e4a8" stroke="#d9a64c" stroke-width="1.2" stroke-linejoin="round"/>
+            <circle cx="30" cy="68" r="12" fill="#d98a2b" stroke="#7a3f12" stroke-width="2"/><circle cx="24.96" cy="64.16" r="1.1" fill="#c0701f"/><circle cx="33.84" cy="62.24" r="1.1" fill="#c0701f"/><circle cx="36" cy="69.44" r="1.1" fill="#c0701f"/><circle cx="28.2" cy="71.6" r="1.1" fill="#c0701f"/>
+            <circle cx="58" cy="68" r="12" fill="#d98a2b" stroke="#7a3f12" stroke-width="2"/><circle cx="52.96" cy="64.16" r="1.1" fill="#c0701f"/><circle cx="61.84" cy="62.24" r="1.1" fill="#c0701f"/><circle cx="64" cy="69.44" r="1.1" fill="#c0701f"/><circle cx="56.2" cy="71.6" r="1.1" fill="#c0701f"/>
+            <circle cx="23" cy="80" r="11.5" fill="#d98a2b" stroke="#7a3f12" stroke-width="2"/><circle cx="18.17" cy="76.32" r="1.1" fill="#c0701f"/><circle cx="26.68" cy="74.48" r="1.1" fill="#c0701f"/><circle cx="28.75" cy="81.38" r="1.1" fill="#c0701f"/><circle cx="21.27" cy="83.45" r="1.1" fill="#c0701f"/>
+            <circle cx="44" cy="82" r="11.5" fill="#d98a2b" stroke="#7a3f12" stroke-width="2"/><circle cx="39.17" cy="78.32" r="1.1" fill="#c0701f"/><circle cx="47.68" cy="76.48" r="1.1" fill="#c0701f"/><circle cx="49.75" cy="83.38" r="1.1" fill="#c0701f"/><circle cx="42.27" cy="85.45" r="1.1" fill="#c0701f"/>
+            <circle cx="65" cy="80" r="11.5" fill="#d98a2b" stroke="#7a3f12" stroke-width="2"/><circle cx="60.17" cy="76.32" r="1.1" fill="#c0701f"/><circle cx="68.68" cy="74.48" r="1.1" fill="#c0701f"/><circle cx="70.75" cy="81.38" r="1.1" fill="#c0701f"/><circle cx="63.27" cy="83.45" r="1.1" fill="#c0701f"/>
+            <path d="M9 87H79L72 111.5Q71 114.5 67.5 114.5H20.5Q17 114.5 16 111.5Z" fill="#8a5a2e" stroke="#f0c063" stroke-width="2.54" stroke-linejoin="round"/>
+            <path d="M12.5 96H75.5M15 105H73" stroke="#5e3a1a" stroke-width="2"/>
+            <path d="M22 90V113M32 90V113M44 90V113M56 90V113M66 90V113" stroke="#5e3a1a" stroke-width="1.2" stroke-dasharray="4.5 4.5"/>
+            <rect x="6" y="84" width="76" height="6" rx="3" fill="#a06b38" stroke="#f0c063" stroke-width="2.54"/>
+            </g>
+          </svg>
           <span class="cerveja__estilo">Porção · 8 unidades</span>
           <h3 class="cerveja__nome">Bolinho de queijo</h3>
           <p class="cerveja__descricao">Casquinha crocante por fora e queijo derretendo por dentro. Some da mesa em minutos.</p>
@@ -545,11 +620,37 @@
         </article>
 
         <article class="cerveja produto">
-          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
-              <ellipse cx="22" cy="50" rx="19" ry="5" fill="rgba(255,241,214,0.15)"/>
-              <path d="M8 42c5-15 22-20 29-9" fill="none" stroke="#8a3b1c" stroke-width="9" stroke-linecap="round"/>
-              <path d="M14 34l2 3M22 30l1 4M30 30l-1 4" stroke="rgba(255,241,214,0.4)" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
+          <svg class="produto__icone" viewBox="0 0 120 120" aria-hidden="true">
+            <rect x="3" y="99" width="114" height="18" rx="7" fill="#4a2e17" stroke="#f0c063" stroke-width="3.2"/>
+            <rect x="4.8" y="100.8" width="110.4" height="10.4" rx="5.2" fill="#7a4f2a"/>
+            <path d="M14 104.5C34 103.4 56 105.6 76 104.4M30 108C50 107.2 72 108.8 104 107.8" stroke="#5a3a1e" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M12 108.5q3.4-3.6 6.8 0q3.4 3.6 6.8 0M34 109q3-3.2 6 0M100 109.5q2.6-2.8 5.2 0" stroke="#e3a447" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+            <path d="M16 98C24 76 58 70 78 90" fill="none" stroke="#4a1d0c" stroke-width="20.4"/>
+            <circle cx="16" cy="98" r="10.2" fill="#4a1d0c"/>
+            <path d="M13.27 105.52L12.41 107.87M12.41 107.87l-3.2 2.4M12.41 107.87l-1.6 -3.4" stroke="#4a1d0c" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M16 98C24 76 58 70 78 90" fill="none" stroke="#9c4421" stroke-width="17"/>
+            <circle cx="16" cy="98" r="8.5" fill="#9c4421"/>
+            <path d="M26.16 92.5L13.7 89.07M35.26 86.33L25.45 77.92M46.99 83.77L40.91 72.36M59.65 85.5L57.92 72.69" stroke="#5a2410" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M20.51 83.39Q34.04 75.56 49.99 73.24" stroke="rgba(255,241,214,0.3)" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <ellipse cx="78" cy="90" rx="4.4" ry="9.1" transform="rotate(45 78 90)" fill="#d48c6a" stroke="#4a1d0c" stroke-width="2.4"/>
+            <circle cx="77.2" cy="86" r="1" fill="#f6ead4"/>
+            <circle cx="78.6" cy="91" r="1" fill="#f6ead4"/>
+            <circle cx="77.6" cy="94.4" r="1" fill="#f6ead4"/>
+            <ellipse cx="91" cy="106" rx="9.5" ry="5.6" fill="#d48c6a" stroke="#4a1d0c" stroke-width="2.6"/>
+            <circle cx="87" cy="104.8" r="1" fill="#f6ead4"/>
+            <circle cx="93.6" cy="107.6" r="1" fill="#f6ead4"/>
+            <circle cx="91" cy="103.6" r="1" fill="#f6ead4"/>
+            <circle cx="95.6" cy="105.2" r="1" fill="#f6ead4"/>
+            <circle cx="89.4" cy="108" r="1" fill="#f6ead4"/>
+            <path d="M91 106L96 50" stroke="#ecd3a6" stroke-width="2.6" stroke-linecap="round"/>
+            <ellipse cx="106" cy="103" rx="9.5" ry="5.6" fill="#d48c6a" stroke="#4a1d0c" stroke-width="2.6"/>
+            <circle cx="102" cy="101.8" r="1" fill="#f6ead4"/>
+            <circle cx="108.6" cy="104.6" r="1" fill="#f6ead4"/>
+            <circle cx="106" cy="100.6" r="1" fill="#f6ead4"/>
+            <circle cx="110.6" cy="102.2" r="1" fill="#f6ead4"/>
+            <circle cx="104.4" cy="105" r="1" fill="#f6ead4"/>
+            <path d="M106 103L112 58" stroke="#ecd3a6" stroke-width="2.6" stroke-linecap="round"/>
+          </svg>
           <span class="cerveja__estilo">Na chapa</span>
           <h3 class="cerveja__nome">Linguiça artesanal</h3>
           <p class="cerveja__descricao">Linguiça da região na chapa, com cebola caramelizada e pão pra acompanhar.</p>
@@ -564,12 +665,20 @@
         </article>
 
         <article class="cerveja produto">
-          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
-              <path d="M10 56 6 26h32l-4 30Z" fill="#6b4423" stroke="rgba(255,241,214,0.4)"/>
-              <rect x="10" y="12" width="6" height="22" rx="3" fill="#f2c24e" transform="rotate(-10 13 23)"/>
-              <rect x="19" y="8" width="6" height="24" rx="3" fill="#e9b441"/>
-              <rect x="28" y="12" width="6" height="22" rx="3" fill="#f2c24e" transform="rotate(10 31 23)"/>
-            </svg>
+          <svg class="produto__icone" viewBox="0 0 120 120" aria-hidden="true">
+            <path d="M44 86C40 70 36 56 27 38" stroke="#6f7a3e" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+            <path d="M40.26 71.98l3.48 -6.07M40.26 71.98l-6.19 -3.27M38.59 66.45l3.33 -6.16M38.59 66.45l-6.27 -3.11M36.73 60.88l3.15 -6.25M36.73 60.88l-6.36 -2.93M34.64 55.21l2.94 -6.35M34.64 55.21l-6.45 -2.72M32.27 49.36l2.73 -6.45M32.27 49.36l-6.54 -2.5M29.55 43.29l2.51 -6.54M29.55 43.29l-6.62 -2.28M27 38l2.33 -6.6M27 38l-6.68 -2.1" stroke="#93a057" stroke-width="2.4" stroke-linecap="round"/>
+            <g transform="translate(19 79) rotate(-20)"><path d="M-16 0Q0 -18.6 16 0Q0 4.2 -16 0Z" fill="#f2c24e" stroke="#7a4a1c" stroke-width="1.8" stroke-linejoin="round"/><path d="M-16 0Q0 -18.6 16 0" fill="none" stroke="#9a5a22" stroke-width="3" stroke-linecap="round"/><ellipse cx="-3.84" cy="-2.4" rx="3.4" ry="1.8" fill="#d98a2b"/><ellipse cx="6.4" cy="-1.44" rx="2.4" ry="1.3" fill="#c8741e"/></g>
+            <g transform="translate(50 76) rotate(18)"><path d="M-16 0Q0 -18.6 16 0Q0 4.2 -16 0Z" fill="#f2c24e" stroke="#7a4a1c" stroke-width="1.8" stroke-linejoin="round"/><path d="M-16 0Q0 -18.6 16 0" fill="none" stroke="#9a5a22" stroke-width="3" stroke-linecap="round"/><ellipse cx="-3.84" cy="-2.4" rx="3.4" ry="1.8" fill="#d98a2b"/><ellipse cx="6.4" cy="-1.44" rx="2.4" ry="1.3" fill="#c8741e"/></g>
+            <g transform="translate(34 82) rotate(4)"><path d="M-17 0Q0 -19.38 17 0Q0 4.38 -17 0Z" fill="#f2c24e" stroke="#7a4a1c" stroke-width="1.8" stroke-linejoin="round"/><path d="M-17 0Q0 -19.38 17 0" fill="none" stroke="#9a5a22" stroke-width="3" stroke-linecap="round"/><ellipse cx="-4.08" cy="-2.5" rx="3.4" ry="1.8" fill="#d98a2b"/><ellipse cx="6.8" cy="-1.5" rx="2.4" ry="1.3" fill="#c8741e"/></g>
+            <path d="M69 82.5C64 81.5 63.5 74.5 69.5 72C72.5 75.2 74.5 81.5 69 82.5Z" fill="#f3dfae" stroke="#9a6a2e" stroke-width="1.6" stroke-linejoin="round"/>
+            <g transform="translate(58 83) rotate(-8)"><path d="M-15 0Q0 -17.05 15 0Q0 3.85 -15 0Z" fill="#f2c24e" stroke="#7a4a1c" stroke-width="1.8" stroke-linejoin="round"/><path d="M-15 0Q0 -17.05 15 0" fill="none" stroke="#9a5a22" stroke-width="3" stroke-linecap="round"/><ellipse cx="-3.6" cy="-2.2" rx="3.4" ry="1.8" fill="#d98a2b"/><ellipse cx="6" cy="-1.32" rx="2.4" ry="1.3" fill="#c8741e"/></g>
+            <path d="M76 84 109 78.5Q116.5 77.2 116.5 83.5Q116.5 89.8 109 89.5L76 90Z" fill="#43342a" stroke="#f0c063" stroke-width="3.2" stroke-linejoin="round"/>
+            <circle cx="109.5" cy="84" r="2.3" fill="#2a1c10"/>
+            <path d="M4 87H78L73 109.5Q71 116.5 63 116.5H19Q11 116.5 9 109.5Z" fill="#43342a" stroke="#f0c063" stroke-width="3.2" stroke-linejoin="round"/>
+            <rect x="2" y="82.5" width="78" height="7.5" rx="3.75" fill="#54412f" stroke="#f0c063" stroke-width="3.2"/>
+            <path d="M16 99H66" stroke="rgba(255,241,214,0.12)" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
           <span class="cerveja__estilo">Porção</span>
           <h3 class="cerveja__nome">Batata rústica</h3>
           <p class="cerveja__descricao">Batata com casca, alecrim e alho assado. Combina com qualquer um dos rótulos.</p>
