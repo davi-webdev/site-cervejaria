@@ -1,5 +1,5 @@
 /* ==========================================================
-   script.js – animação de rolagem da Cervejaria Correnteza
+   script.js – animação de rolagem da Cervejaria Feierabend
    Versão 2: as cenas se misturam umas nas outras (crossfade)
    e os vídeos tocam sozinhos quando a cena aparece.
    Usa a biblioteca GSAP com o plugin ScrollTrigger.
