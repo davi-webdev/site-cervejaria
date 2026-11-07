@@ -11,15 +11,115 @@
   <meta name="description" content="Feierabend, cervejaria artesanal fictícia. Do campo de cevada ao copo gelado: conheça nossa história e nossas cervejas.">
   <meta name="theme-color" content="#140d07">
 
+  <!-- Prévia quando alguém manda o link no WhatsApp, LinkedIn etc. -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Feierabend · Cervejaria Artesanal">
+  <meta property="og:description" content="Do campo de cevada ao copo gelado. Peça pelo WhatsApp em poucos toques.">
+  <meta property="og:image" content="https://davi-webdev.github.io/site-cervejaria/midia/previa.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://davi-webdev.github.io/site-cervejaria/">
+  <meta name="twitter:card" content="summary_large_image">
+
   <!-- Fontes do Google Fonts: Fraunces (títulos) e DM Sans (textos) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@600;800&display=swap" rel="stylesheet">
 
+  <!-- Avisa o CSS que o JavaScript está ligado (mostra a abertura).
+       Se em 9 segundos nada tirar a abertura, ela some sozinha. -->
+  <script>
+    document.documentElement.classList.add("js");
+    setTimeout(function () { document.documentElement.classList.add("abertura-saiu"); }, 9000);
+  </script>
+
   <!-- Nosso arquivo de estilo (cores, fontes, layout) -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- =====================================================
+       ABERTURA: copo enchendo de chope (o script controla)
+       ===================================================== -->
+  <div class="abertura" aria-hidden="true">
+    <div class="abertura__conteudo">
+      <svg class="abertura__copo" viewBox="0 -46 120 236" role="presentation">
+        <defs>
+          <clipPath id="copo-dentro">
+            <path d="M24 24 L96 24 L88 174 Q60 181 32 174 Z"/>
+          </clipPath>
+          <linearGradient id="cor-chope" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#f0c063"/>
+            <stop offset="1" stop-color="#b8651a"/>
+          </linearGradient>
+          <linearGradient id="cor-metal" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#8a6a45"/>
+            <stop offset="0.5" stop-color="#d9b98a"/>
+            <stop offset="1" stop-color="#7a5a38"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Torneira da chopeira (a alavanca desce e sobe) -->
+        <g class="abertura__torneira">
+          <rect class="abertura__alavanca" x="56" y="-44" width="8" height="26" rx="4" fill="#6b4423"/>
+          <rect x="44" y="-20" width="32" height="10" rx="5" fill="url(#cor-metal)"/>
+          <rect x="55" y="-12" width="10" height="8" rx="2" fill="url(#cor-metal)"/>
+        </g>
+
+        <!-- Jato de chope caindo da torneira -->
+        <rect class="abertura__jato" x="57" y="-5" width="6" height="45" rx="3" fill="url(#cor-chope)"/>
+
+        <!-- O copo (inclina no começo e endireita enquanto enche) -->
+        <g class="abertura__vidro">
+          <g clip-path="url(#copo-dentro)">
+            <!-- "nível": gira ao contrário do copo, pro chope ficar reto -->
+            <g class="abertura__nivel">
+              <!-- parte do jato dentro do copo (o vidro corta o que sobra) -->
+              <rect class="abertura__jato" x="57" y="38" width="6" height="150" fill="url(#cor-chope)"/>
+              <g class="abertura__liquido" transform="translate(0 180)">
+                <rect x="-60" y="0" width="240" height="220" fill="url(#cor-chope)"/>
+                <!-- espuma com ondinha (o script faz ela andar pro lado) -->
+                <path class="abertura__onda" d="M-80 -4 Q-70 -10 -60 -4 T-40 -4 T-20 -4 T0 -4 T20 -4 T40 -4 T60 -4 T80 -4 T100 -4 T120 -4 T140 -4 T160 -4 T180 -4 T200 -4 V10 H-80 Z" fill="#fff1d6"/>
+                <g fill="rgba(255, 241, 214, 0.7)">
+                  <circle class="abertura__bolha" cx="42" cy="130" r="2"/>
+                  <circle class="abertura__bolha" cx="58" cy="140" r="1.5"/>
+                  <circle class="abertura__bolha" cx="70" cy="125" r="2.2"/>
+                  <circle class="abertura__bolha" cx="50" cy="110" r="1.4"/>
+                  <circle class="abertura__bolha" cx="78" cy="138" r="1.8"/>
+                </g>
+                <!-- respingos onde o jato bate -->
+                <g class="abertura__respingos" fill="#fff1d6">
+                  <circle cx="52" cy="-6" r="2"/>
+                  <circle cx="66" cy="-7" r="1.6"/>
+                  <circle cx="60" cy="-9" r="1.3"/>
+                </g>
+              </g>
+            </g>
+          </g>
+
+          <!-- Colarinho de espuma que transborda no final -->
+          <g class="abertura__coroa" fill="#fff1d6">
+            <circle cx="30" cy="24" r="7"/>
+            <circle cx="42" cy="20" r="9"/>
+            <circle cx="56" cy="18" r="10"/>
+            <circle cx="70" cy="19" r="9.5"/>
+            <circle cx="83" cy="21" r="8"/>
+            <circle cx="92" cy="25" r="6"/>
+          </g>
+          <!-- espuma escorrendo pelo lado de fora -->
+          <path class="abertura__escorre" d="M92 28 C95 40 93 52 94 60 a3 3 0 0 1 -6 0 C88 50 89 40 88 30 Z" fill="#fff1d6"/>
+
+          <!-- Contorno e brilho do vidro -->
+          <path d="M24 24 L96 24 L88 174 Q60 181 32 174 Z" fill="none" stroke="rgba(246, 234, 212, 0.6)" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M33 36 L28 150" stroke="rgba(255, 255, 255, 0.18)" stroke-width="3" stroke-linecap="round"/>
+        </g>
+      </svg>
+
+      <p class="abertura__marca">Feierabend</p>
+      <p class="abertura__frase"><span class="abertura__texto">Tirando o seu chope&hellip;</span> <span class="abertura__porcento">0%</span></p>
+    </div>
+  </div>
 
   <!-- =====================================================
        BARRA DE PROGRESSO (o script do Davi controla a largura)
@@ -36,7 +136,10 @@
       Feierabend
       <span class="topo__logo-sub">Cervejaria Artesanal</span>
     </a>
-    <a href="#contato" class="botao botao--pequeno">Fazer pedido</a>
+    <div class="topo__direita">
+      <span class="status status--topo" data-status></span>
+      <a href="#cervejas" class="botao botao--pequeno" data-abrir-pedido>Fazer pedido</a>
+    </div>
   </header>
 
   <main>
@@ -45,7 +148,7 @@
          CENA 1: O CAMPO DE CEVADA
          ===================================================== -->
     <section class="cena cena--1" id="inicio">
-      <video class="cena__video" src="midia/Cevada%20cena%201.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <video class="cena__video" src="midia/Cevada%20cena%201.mp4" poster="midia/capa1.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cena__sombra"></div>
       <div class="cena__texto">
         <span class="cena__etapa">01 · O campo</span>
@@ -59,7 +162,7 @@
          CENA 2: A BRASSAGEM
          ===================================================== -->
     <section class="cena cena--2">
-      <video class="cena__video" src="midia/brassagem%20cena%202.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <video class="cena__video" src="midia/brassagem%20cena%202.mp4" poster="midia/capa2.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cena__sombra"></div>
       <div class="cena__texto">
         <span class="cena__etapa">02 · A brassagem</span>
@@ -72,7 +175,7 @@
          CENA 3: A FERMENTAÇÃO
          ===================================================== -->
     <section class="cena cena--3">
-      <video class="cena__video" src="midia/maquinas%20cena%203.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <video class="cena__video" src="midia/maquinas%20cena%203.mp4" poster="midia/capa3.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cena__sombra"></div>
       <div class="cena__texto">
         <span class="cena__etapa">03 · A fermentação</span>
@@ -85,7 +188,7 @@
          CENA 4: O COPO GELADO
          ===================================================== -->
     <section class="cena cena--4">
-      <video class="cena__video" src="midia/Copo%20cena%204.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <video class="cena__video" src="midia/Copo%20cena%204.mp4" poster="midia/capa4.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cena__sombra"></div>
       <div class="cena__texto">
         <span class="cena__etapa">04 · O copo</span>
@@ -110,6 +213,14 @@
           <span class="cerveja__estilo">Witbier · 4,8%</span>
           <h3 class="cerveja__nome">Remanso</h3>
           <p class="cerveja__descricao">Leve e cítrica, com casca de laranja e coentro. Feita para tardes de calor.</p>
+          <div class="cerveja__compra" data-produto="Remanso" data-preco="16">
+            <p class="cerveja__preco">R$ 16<span>,00</span> <small>garrafa 500 ml</small></p>
+            <div class="quantidade">
+              <button type="button" class="quantidade__botao" data-acao="menos" aria-label="Tirar uma Remanso do pedido">&minus;</button>
+              <span class="quantidade__numero" aria-live="polite">0</span>
+              <button type="button" class="quantidade__botao" data-acao="mais" aria-label="Adicionar uma Remanso ao pedido">+</button>
+            </div>
+          </div>
         </article>
 
         <article class="cerveja cerveja--ambar surgir">
@@ -117,6 +228,14 @@
           <span class="cerveja__estilo">American IPA · 6,5%</span>
           <h3 class="cerveja__nome">Cheia</h3>
           <p class="cerveja__descricao">Aromática e lupulada, com amargor que transborda. Notas de maracujá e pinho.</p>
+          <div class="cerveja__compra" data-produto="Cheia" data-preco="22">
+            <p class="cerveja__preco">R$ 22<span>,00</span> <small>garrafa 500 ml</small></p>
+            <div class="quantidade">
+              <button type="button" class="quantidade__botao" data-acao="menos" aria-label="Tirar uma Cheia do pedido">&minus;</button>
+              <span class="quantidade__numero" aria-live="polite">0</span>
+              <button type="button" class="quantidade__botao" data-acao="mais" aria-label="Adicionar uma Cheia ao pedido">+</button>
+            </div>
+          </div>
         </article>
 
         <article class="cerveja cerveja--escura surgir">
@@ -124,8 +243,47 @@
           <span class="cerveja__estilo">Stout · 5,9%</span>
           <h3 class="cerveja__nome">Foz</h3>
           <p class="cerveja__descricao">Escura e cremosa, com café e cacau torrados. O fim do rio é sempre profundo.</p>
+          <div class="cerveja__compra" data-produto="Foz" data-preco="20">
+            <p class="cerveja__preco">R$ 20<span>,00</span> <small>garrafa 500 ml</small></p>
+            <div class="quantidade">
+              <button type="button" class="quantidade__botao" data-acao="menos" aria-label="Tirar uma Foz do pedido">&minus;</button>
+              <span class="quantidade__numero" aria-live="polite">0</span>
+              <button type="button" class="quantidade__botao" data-acao="mais" aria-label="Adicionar uma Foz ao pedido">+</button>
+            </div>
+          </div>
         </article>
 
+      </div>
+    </section>
+
+    <!-- =====================================================
+         AGENDA DA SEMANA (o script marca o evento de hoje)
+         data-dia: 0 = domingo, 1 = segunda ... 6 = sábado
+         ===================================================== -->
+    <section class="agenda" id="agenda">
+      <div class="secao__cabecalho">
+        <span class="secao__etiqueta">Agenda da semana</span>
+        <h2 class="secao__titulo">Sempre tem um motivo pro Feierabend.</h2>
+      </div>
+
+      <div class="agenda__lista">
+        <article class="evento surgir" data-dia="4">
+          <span class="evento__dia">Quinta</span>
+          <h3 class="evento__nome">Chope em dobro</h3>
+          <p class="evento__info">Das 17h às 19h, o segundo copo é por nossa conta.</p>
+        </article>
+
+        <article class="evento surgir" data-dia="5">
+          <span class="evento__dia">Sexta</span>
+          <h3 class="evento__nome">Música ao vivo</h3>
+          <p class="evento__info">Rock e blues no palco da taproom, a partir das 20h.</p>
+        </article>
+
+        <article class="evento surgir" data-dia="6">
+          <span class="evento__dia">Sábado</span>
+          <h3 class="evento__nome">Tour pela fábrica</h3>
+          <p class="evento__info">Às 18h, do tanque ao copo, com degustação dos três rótulos.</p>
+        </article>
       </div>
     </section>
 
@@ -136,6 +294,7 @@
       <div class="contato__bloco surgir">
         <span class="secao__etiqueta">Fale com a gente</span>
         <h2 class="secao__titulo">Bora provar?</h2>
+        <p class="status status--contato" data-status></p>
         <p class="contato__texto">Faça seu pedido pelo WhatsApp ou venha conhecer nossa taproom.</p>
 
         <!-- TROQUE 5500000000000 pelo número real: 55 + DDD + número, só números -->
@@ -150,6 +309,31 @@
           <li><strong>Endereço</strong> Rua da Feierabend, 100 · Centro</li>
           <li><strong>Horário</strong> Quinta a sábado, das 17h às 23h</li>
         </ul>
+
+        <!-- Como chegar: abre o app de mapa do celular -->
+        <div class="contato__rotas">
+          <a class="botao botao--contorno" href="https://www.google.com/maps/search/?api=1&amp;query=Centro%2C%20Blumenau%20-%20SC" target="_blank" rel="noopener">Abrir no Google Maps</a>
+          <a class="botao botao--contorno" href="https://waze.com/ul?q=Centro%2C%20Blumenau%20-%20SC&amp;navigate=yes" target="_blank" rel="noopener">Ir com o Waze</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         VITRINE: este site é uma demonstração do trabalho do Davi
+         ===================================================== -->
+    <section class="vitrine" id="vitrine">
+      <div class="vitrine__bloco surgir">
+        <span class="secao__etiqueta">Site de demonstração</span>
+        <h2 class="secao__titulo">Gostou? Seu negócio pode ter um desses.</h2>
+        <p class="vitrine__texto">A Feierabend não existe: este site foi criado por Davi Tavares para mostrar o que dá pra fazer. Animação que prende a atenção, pedido pelo WhatsApp, horário atualizado sozinho e tudo funcionando liso no celular.</p>
+        <ul class="vitrine__lista">
+          <li>Pedido pronto no WhatsApp</li>
+          <li>Feito pro celular</li>
+          <li>Rápido de abrir</li>
+        </ul>
+        <div class="vitrine__botoes">
+          <a class="botao" href="https://github.com/davi-webdev/site-cervejaria" target="_blank" rel="noopener">Ver o código no GitHub</a>
+        </div>
       </div>
     </section>
 
@@ -163,6 +347,67 @@
     <p>Marca fictícia, criada para fins de portfólio.</p>
     <p class="rodape__aviso">Beba com moderação. Venda proibida para menores de 18 anos.</p>
   </footer>
+
+  <!-- =====================================================
+       PEDIDO: barra que aparece quando tem item escolhido
+       e painel que monta a mensagem do WhatsApp
+       ===================================================== -->
+  <div class="pedido" data-pedido>
+    <button type="button" class="pedido__barra" data-abrir-pedido aria-controls="painel-pedido" aria-expanded="false">
+      <span class="pedido__contagem" data-pedido-contagem>0 itens</span>
+      <span class="pedido__total" data-pedido-total>R$ 0,00</span>
+      <span class="pedido__acao">Ver pedido</span>
+    </button>
+  </div>
+
+  <div class="painel" id="painel-pedido" role="dialog" aria-modal="true" aria-labelledby="painel-titulo" hidden>
+    <div class="painel__fundo" data-fechar-pedido></div>
+    <div class="painel__caixa">
+      <div class="painel__topo">
+        <h2 class="painel__titulo" id="painel-titulo">Seu pedido</h2>
+        <button type="button" class="painel__fechar" data-fechar-pedido aria-label="Fechar">&times;</button>
+      </div>
+
+      <ul class="painel__itens" data-pedido-lista></ul>
+      <p class="painel__vazio" data-pedido-vazio>Escolha suas cervejas na seção <a href="#cervejas" data-fechar-pedido>Nossos rótulos</a>.</p>
+
+      <div class="painel__total">
+        <span>Total</span>
+        <strong data-pedido-total>R$ 0,00</strong>
+      </div>
+
+      <form class="painel__form" data-pedido-form novalidate>
+        <fieldset class="opcoes">
+          <legend class="opcoes__titulo">Como prefere?</legend>
+          <label class="opcao"><input type="radio" name="entrega" value="Retirar na taproom" checked><span>Retirar</span></label>
+          <label class="opcao"><input type="radio" name="entrega" value="Entrega"><span>Entrega</span></label>
+        </fieldset>
+
+        <label class="campo">
+          <span class="campo__nome">Seu nome</span>
+          <input class="campo__entrada" name="nome" autocomplete="name" required>
+        </label>
+        <label class="campo" data-campo-endereco hidden>
+          <span class="campo__nome">Endereço</span>
+          <input class="campo__entrada" name="endereco" autocomplete="street-address">
+        </label>
+        <label class="campo">
+          <span class="campo__nome">Pra quando?</span>
+          <input class="campo__entrada" name="horario" placeholder="Ex.: hoje às 19h">
+        </label>
+        <label class="campo">
+          <span class="campo__nome">Observação <small>(opcional)</small></span>
+          <textarea class="campo__entrada" name="obs" rows="2" placeholder="Ex.: bem gelada, por favor"></textarea>
+        </label>
+
+        <p class="painel__erro" data-pedido-erro role="alert"></p>
+        <p class="status status--painel" data-status></p>
+
+        <button type="submit" class="botao botao--whatsapp">Enviar pedido no WhatsApp</button>
+        <p class="painel__aviso">Abre o WhatsApp com a mensagem pronta. Nada é enviado sem você confirmar lá.</p>
+      </form>
+    </div>
+  </div>
 
   <!-- =====================================================
        SCRIPTS (nessa ordem! O último é o do Davi)

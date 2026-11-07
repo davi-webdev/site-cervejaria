@@ -214,7 +214,8 @@ a {
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(20, 13, 7, 0.55) 0%,
+    rgba(20, 13, 7, 0.85) 0%,
+    rgba(20, 13, 7, 0.35) 15%,
     rgba(20, 13, 7, 0.1) 35%,
     rgba(20, 13, 7, 0.88) 100%
   );
@@ -414,6 +415,8 @@ a {
 .contato {
   padding: 88px var(--espaco-lateral) 96px;
   background:
+    /* começa com a mesma cor da seção de cima e vai escurecendo: sem emenda */
+    linear-gradient(180deg, var(--cor-fundo-claro) 0%, rgba(30, 20, 11, 0) 220px),
     radial-gradient(ellipse at 50% 0%, rgba(217, 138, 43, 0.18) 0%, rgba(217, 138, 43, 0) 60%),
     var(--cor-fundo);
   scroll-margin-top: var(--altura-topo);
@@ -509,12 +512,11 @@ a {
 
   .cena__sombra {
     /* escurece mais o lado esquerdo, onde fica o texto */
-    background: linear-gradient(
-      90deg,
-      rgba(20, 13, 7, 0.85) 0%,
-      rgba(20, 13, 7, 0.35) 55%,
-      rgba(20, 13, 7, 0.1) 100%
-    );
+    background:
+      /* escurece o topo, pro logo e o botão não ficarem em cima do céu claro */
+      linear-gradient(180deg, rgba(20, 13, 7, 0.9) 0%, rgba(20, 13, 7, 0.45) 14%, rgba(20, 13, 7, 0) 32%),
+      /* escurece o lado esquerdo, onde fica o texto */
+      linear-gradient(90deg, rgba(20, 13, 7, 0.85) 0%, rgba(20, 13, 7, 0.35) 55%, rgba(20, 13, 7, 0.1) 100%);
   }
 
   .cervejas,
@@ -546,4 +548,710 @@ a {
   .secao__titulo {
     font-size: 3rem;
   }
+}
+
+/* =========================================================
+   13. ABERTURA (copo enchendo de chope)
+   Só aparece quando o JavaScript está ligado (classe "js"
+   no <html>). O script.js controla a animação e tira ela
+   da tela quando o site está pronto.
+   ========================================================= */
+.abertura {
+  display: none;
+}
+
+.js .abertura {
+  position: fixed;
+  inset: 0;
+  z-index: 200;  /* acima de tudo, até do topo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at 50% 60%, rgba(217, 138, 43, 0.16) 0%, rgba(217, 138, 43, 0) 55%),
+    var(--cor-fundo);
+}
+
+/* Trava a rolagem enquanto a abertura está na tela */
+.travado,
+.travado body {
+  overflow: hidden;
+}
+
+/* Rede de segurança: se o script quebrar, a abertura some sozinha */
+.abertura-saiu .abertura { display: none; }
+.abertura-saiu.travado,
+.abertura-saiu.travado body { overflow: auto; }
+
+.abertura__conteudo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.abertura__copo {
+  width: 110px;
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 18px 30px rgba(217, 138, 43, 0.25));
+}
+
+.abertura__marca {
+  margin-top: 10px;
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--cor-dourado);
+}
+
+.abertura__porcento {
+  display: inline-block;
+  min-width: 3.2em;
+  text-align: left;
+  color: var(--cor-dourado);
+  font-variant-numeric: tabular-nums;
+}
+
+.abertura__frase {
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+/* Jato e espuma começam escondidos (o script mostra na hora certa) */
+.abertura__jato,
+.abertura__coroa,
+.abertura__escorre,
+.abertura__respingos {
+  visibility: hidden;
+}
+
+/* Bolhinhas subindo dentro do chope */
+.abertura__bolha {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .abertura__bolha {
+    animation: bolha 1.6s ease-in infinite;
+  }
+  .abertura__bolha:nth-child(2) { animation-delay: 0.4s; animation-duration: 1.9s; }
+  .abertura__bolha:nth-child(3) { animation-delay: 0.9s; animation-duration: 1.4s; }
+  .abertura__bolha:nth-child(4) { animation-delay: 1.2s; animation-duration: 2.1s; }
+  .abertura__bolha:nth-child(5) { animation-delay: 0.2s; animation-duration: 1.7s; }
+}
+
+@keyframes bolha {
+  0%   { transform: translateY(0); opacity: 0; }
+  15%  { opacity: 0.8; }
+  100% { transform: translateY(-110px); opacity: 0; }
+}
+
+
+/* =========================================================
+   14. DETALHES DAS CENAS
+   ========================================================= */
+
+/* Cada palavra do título fica numa "janelinha": ela sobe
+   de dentro dela quando a cena aparece */
+.palavra {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.08em;  /* não corta o "g", "j", "p" */
+}
+
+.palavra__dentro {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Costura entre a última cena e a seção das cervejas.
+   Um degradê no pé da cena do copo, pra não ficar aquela
+   "fresta" com corte seco entre as duas. */
+.cena--4::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 22vh;
+  background: linear-gradient(180deg, rgba(30, 20, 11, 0) 0%, var(--cor-fundo-claro) 85%, var(--cor-fundo-claro) 100%);
+  z-index: 1;  /* acima do vídeo e da sombra, abaixo do texto */
+  pointer-events: none;
+}
+
+.cena__video {
+  will-change: transform;
+}
+
+/* A seção das cervejas sobe 3px por cima do palco e tampa
+   qualquer pixel de vídeo que "vaze" na emenda */
+.cervejas {
+  position: relative;
+  z-index: 5;
+  margin-top: -3px;
+}
+
+
+/* =========================================================
+   15. SELO "ABERTO AGORA / FECHADO"
+   O script escreve o texto e troca a classe sozinho.
+   ========================================================= */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--cor-texto-suave);
+}
+
+.status:empty { display: none; }
+
+/* bolinha colorida antes do texto */
+.status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: currentColor;
+  flex-shrink: 0;
+}
+
+.status--aberto  { color: #7fd08a; }
+.status--fechando { color: var(--cor-dourado); }
+.status--fechado { color: #e38b72; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .status--aberto::before,
+  .status--fechando::before {
+    animation: pulsar 2s ease-in-out infinite;
+  }
+}
+
+@keyframes pulsar {
+  0%, 100% { box-shadow: 0 0 0 0 currentColor; }
+  50%      { box-shadow: 0 0 0 4px rgba(0, 0, 0, 0); }
+}
+
+.topo__direita {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* no celular pequeno, o selo do topo some (aparece no contato) */
+.status--topo { display: none; }
+
+.status--contato {
+  margin-top: 14px;
+  justify-content: center;
+}
+
+.status--painel {
+  margin-bottom: 12px;
+}
+
+
+/* =========================================================
+   16. PREÇO E QUANTIDADE NOS CARDS
+   ========================================================= */
+.cerveja {
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cerveja__compra {
+  margin-top: auto;   /* empurra pro pé do card */
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cerveja__preco {
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--cor-texto);
+}
+
+.cerveja__preco span {
+  font-size: 0.9rem;
+}
+
+.cerveja__preco small {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--fonte-texto);
+  font-weight: 500;
+  font-size: 0.75rem;
+  color: var(--cor-texto-suave);
+}
+
+.quantidade {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.quantidade__botao {
+  width: 44px;   /* tamanho bom pro dedo */
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--cor-dourado);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.quantidade__botao:hover { background-color: rgba(240, 192, 99, 0.12); }
+.quantidade__botao:active { transform: scale(0.9); }
+.quantidade__botao:disabled { opacity: 0.35; cursor: default; }
+
+.quantidade__numero {
+  min-width: 1.6em;
+  text-align: center;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* card com item no pedido ganha borda dourada */
+.cerveja--no-pedido {
+  border-color: rgba(240, 192, 99, 0.6);
+  box-shadow: 0 0 0 1px rgba(240, 192, 99, 0.25), 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+
+/* =========================================================
+   17. AGENDA DA SEMANA
+   ========================================================= */
+.agenda {
+  padding: 88px var(--espaco-lateral);
+  background:
+    linear-gradient(180deg, var(--cor-fundo-claro) 0%, var(--cor-fundo) 100%);
+  scroll-margin-top: var(--altura-topo);
+}
+
+.agenda__lista {
+  display: grid;
+  gap: 14px;
+}
+
+.evento {
+  position: relative;
+  padding: 22px 24px;
+  border-left: 3px solid var(--cor-marrom);
+  border-radius: 0 var(--raio) var(--raio) 0;
+  background-color: rgba(42, 28, 16, 0.6);
+}
+
+.evento__dia {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cor-dourado);
+}
+
+.evento__nome {
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.evento__info { color: var(--cor-texto-suave); }
+
+/* evento de hoje (ou o próximo) ganha destaque */
+.evento--destaque {
+  border-left-color: var(--cor-dourado);
+  background-color: var(--cor-cartao);
+}
+
+.evento__selo {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--cor-dourado), var(--cor-ambar));
+  color: var(--cor-fundo);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   18. CONTATO: BOTÕES DE "COMO CHEGAR"
+   ========================================================= */
+.botao--contorno {
+  background: transparent;
+  border: 1px solid rgba(240, 192, 99, 0.5);
+  color: var(--cor-dourado);
+}
+
+.botao--contorno:hover {
+  background-color: rgba(240, 192, 99, 0.1);
+  box-shadow: none;
+}
+
+.contato__rotas {
+  display: grid;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+
+/* =========================================================
+   19. VITRINE (site de demonstração do Davi)
+   ========================================================= */
+.vitrine {
+  padding: 72px var(--espaco-lateral) 88px;
+  background-color: var(--cor-fundo);
+}
+
+.vitrine__bloco {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 32px 26px;
+  border: 1px dashed rgba(240, 192, 99, 0.45);
+  border-radius: var(--raio);
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(217, 138, 43, 0.16) 0%, rgba(217, 138, 43, 0) 60%),
+    var(--cor-fundo-claro);
+}
+
+.vitrine__texto {
+  margin: 14px 0 18px;
+  color: var(--cor-texto-suave);
+}
+
+.vitrine__lista {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.vitrine__lista li {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background-color: rgba(240, 192, 99, 0.1);
+  color: var(--cor-dourado);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.vitrine__botoes {
+  display: grid;
+  gap: 10px;
+}
+
+
+/* =========================================================
+   20. BARRA DO PEDIDO (aparece quando escolhe uma cerveja)
+   ========================================================= */
+.pedido {
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 95;
+  width: min(calc(100% - 2 * var(--espaco-lateral)), 520px);
+  transform: translate(-50%, 140%);  /* escondida embaixo da tela */
+  transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  pointer-events: none;
+}
+
+.pedido--visivel {
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+
+.pedido__barra {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  padding: 10px 10px 10px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--cor-dourado), var(--cor-ambar));
+  color: var(--cor-fundo);
+  font-family: var(--fonte-texto);
+  font-size: 0.95rem;
+  font-weight: 700;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+.pedido__total {
+  margin-right: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.pedido__acao {
+  padding: 10px 16px;
+  border-radius: 999px;
+  background-color: var(--cor-fundo);
+  color: var(--cor-dourado);
+}
+
+/* pulinho quando adiciona item */
+.pedido--pulou .pedido__barra {
+  animation: pulinho 0.35s ease;
+}
+
+@keyframes pulinho {
+  40% { transform: scale(1.04); }
+}
+
+
+/* =========================================================
+   21. PAINEL DO PEDIDO
+   ========================================================= */
+.painel {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: flex;
+  align-items: flex-end;  /* no celular sobe de baixo */
+  justify-content: center;
+}
+
+.painel[hidden] { display: none; }
+
+.painel__fundo {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(10, 6, 3, 0.7);
+  animation: aparecer 0.25s ease;
+}
+
+.painel__caixa {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  max-height: 92svh;
+  overflow-y: auto;
+  padding: 22px var(--espaco-lateral) calc(22px + env(safe-area-inset-bottom));
+  border-radius: 24px 24px 0 0;
+  border: 1px solid var(--cor-borda);
+  background-color: var(--cor-fundo-claro);
+  animation: subir 0.35s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+@keyframes aparecer { from { opacity: 0; } }
+@keyframes subir { from { transform: translateY(40px); opacity: 0; } }
+
+/* espaço no pé da página pra barra do pedido não tampar o rodapé */
+.tem-pedido body { padding-bottom: 96px; }
+
+.painel-aberto,
+.painel-aberto body { overflow: hidden; }
+
+.painel__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.painel__titulo {
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  font-size: 1.6rem;
+}
+
+.painel__fechar {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: var(--cor-texto);
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.painel__itens { list-style: none; }
+
+.painel__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.painel__item-nome { margin-right: auto; font-weight: 700; }
+.painel__item-nome small { display: block; font-weight: 400; color: var(--cor-texto-suave); }
+.painel__item-valor { font-variant-numeric: tabular-nums; }
+
+.painel__vazio {
+  padding: 18px 0;
+  color: var(--cor-texto-suave);
+}
+
+.painel__vazio a { color: var(--cor-dourado); text-decoration: underline; }
+
+.painel__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 16px 0 20px;
+  font-size: 1.05rem;
+}
+
+.painel__total strong {
+  font-family: var(--fonte-titulo);
+  font-size: 1.6rem;
+  color: var(--cor-dourado);
+}
+
+.opcoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+  border: 0;
+}
+
+.opcoes__titulo {
+  grid-column: 1 / -1;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+.opcao input {
+  position: absolute;
+  opacity: 0;
+}
+
+.opcao span {
+  display: block;
+  padding: 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 14px;
+  text-align: center;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.opcao input:checked + span {
+  border-color: var(--cor-dourado);
+  background-color: rgba(240, 192, 99, 0.12);
+  color: var(--cor-dourado);
+}
+
+.opcao input:focus-visible + span {
+  outline: 2px solid var(--cor-dourado);
+  outline-offset: 2px;
+}
+
+.campo {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.campo[hidden] { display: none; }
+
+.campo__nome {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.campo__nome small { font-weight: 400; color: var(--cor-texto-suave); }
+
+.campo__entrada {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  font: inherit;
+  font-size: 1rem;  /* 16px: evita o zoom automático do iPhone */
+  resize: vertical;
+}
+
+.campo__entrada::placeholder { color: rgba(201, 181, 151, 0.55); }
+
+.campo__entrada:focus {
+  outline: none;
+  border-color: var(--cor-dourado);
+}
+
+.campo--erro .campo__entrada { border-color: #e38b72; }
+
+.painel__erro {
+  min-height: 0;
+  margin-bottom: 8px;
+  color: #e38b72;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.painel__erro:empty { display: none; }
+
+.painel__form .botao--whatsapp { width: 100%; }
+
+.painel__aviso {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  text-align: center;
+  color: var(--cor-texto-suave);
+}
+
+
+/* =========================================================
+   22. AJUSTES DAS PARTES NOVAS EM TELAS MAIORES
+   ========================================================= */
+@media (min-width: 560px) {
+  .status--topo { display: inline-flex; }
+}
+
+@media (min-width: 768px) {
+  .agenda { padding-top: 120px; padding-bottom: 120px; }
+  .agenda__lista { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+
+  .contato__rotas,
+  .vitrine__botoes {
+    grid-template-columns: auto auto;
+    justify-content: center;
+  }
+
+  .vitrine__bloco { padding: 48px; text-align: center; }
+  .vitrine__lista { justify-content: center; }
+
+  /* no computador, o painel abre no meio da tela */
+  .painel { align-items: center; }
+  .painel__caixa { border-radius: 24px; padding: 28px 32px; }
 }
