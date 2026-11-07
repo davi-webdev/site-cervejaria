@@ -1,0 +1,549 @@
+/* =========================================================
+   1. PAINEL DE CONTROLE
+   Troque cores, fontes e medidas AQUI. O resto do arquivo
+   usa essas variáveis, então tudo se atualiza sozinho.
+   ========================================================= */
+:root {
+  /* --- Cores principais --- */
+  --cor-fundo: #140d07;          /* marrom quase preto (fundo geral) */
+  --cor-fundo-claro: #1e140b;    /* fundo das seções de cervejas/contato */
+  --cor-cartao: #2a1c10;         /* fundo dos cards */
+  --cor-ambar: #d98a2b;          /* âmbar (cor de cerveja) */
+  --cor-dourado: #f0c063;        /* dourado (destaques) */
+  --cor-marrom: #6b4423;         /* marrom madeira */
+  --cor-texto: #f6ead4;          /* creme (texto principal) */
+  --cor-texto-suave: #c9b597;    /* creme apagado (textos secundários) */
+  --cor-borda: rgba(240, 192, 99, 0.18);
+
+  /* --- Fontes (precisam bater com o link do Google Fonts no index.html) --- */
+  --fonte-titulo: 'Fraunces', Georgia, serif;
+  --fonte-texto: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* --- Degradês usados quando o vídeo da cena não carrega --- */
+  /* Cena 1: campo de cevada ao pôr do sol */
+  --degrade-cena-1:
+    radial-gradient(circle at 75% 18%, #ffd98a 0%, rgba(255, 217, 138, 0) 40%),
+    linear-gradient(180deg, #a07a32 0%, #6e5320 45%, #2a1c0b 100%);
+  /* Cena 2: fogo da brassagem */
+  --degrade-cena-2:
+    radial-gradient(ellipse at 50% 100%, #e3672a 0%, rgba(227, 103, 42, 0) 60%),
+    linear-gradient(180deg, #2b1a10 0%, #4a2614 60%, #7a3a17 100%);
+  /* Cena 3: tanques de fermentação (listras lembram o metal) */
+  --degrade-cena-3:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0) 0 70px, rgba(255, 255, 255, 0.05) 70px 72px),
+    radial-gradient(circle at 30% 30%, #b98a4a 0%, rgba(185, 138, 74, 0) 45%),
+    linear-gradient(160deg, #3a2c1e 0%, #1b140e 100%);
+  /* Cena 4: copo dourado com espuma */
+  --degrade-cena-4:
+    radial-gradient(ellipse 45% 8% at 50% 22%, #fff4dc 0%, rgba(255, 244, 220, 0) 100%),
+    radial-gradient(ellipse 40% 55% at 50% 55%, #f7c35a 0%, #d8891f 45%, rgba(216, 137, 31, 0) 75%),
+    linear-gradient(180deg, #2a1a0b 0%, #120a04 100%);
+
+  /* --- Medidas --- */
+  --espaco-lateral: 20px;        /* margem das laterais no celular */
+  --raio: 18px;                  /* arredondamento dos cards */
+  --altura-topo: 64px;
+}
+
+
+/* =========================================================
+   2. BASE: regras gerais que valem pra página toda
+   ========================================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;  /* faz larguras e espaçamentos serem mais previsíveis */
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Rolagem suave ao clicar em links (só pra quem não pediu "menos movimento") */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  font-family: var(--fonte-texto);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Contorno visível quando alguém navega pelo teclado */
+:focus-visible {
+  outline: 2px solid var(--cor-dourado);
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   3. BARRA DE PROGRESSO (fixa no topo)
+   A largura da barra é controlada pelo script.js do Davi.
+   ========================================================= */
+.progresso {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.08);
+  z-index: 100;
+}
+
+.progresso__barra {
+  width: 0;  /* começa vazia, o script vai preenchendo */
+  height: 100%;
+  background: linear-gradient(90deg, var(--cor-ambar), var(--cor-dourado));
+}
+
+
+/* =========================================================
+   4. TOPO (cabeçalho fixo)
+   ========================================================= */
+.topo {
+  position: fixed;
+  top: 3px;  /* fica logo abaixo da barra de progresso */
+  left: 0;
+  right: 0;
+  height: var(--altura-topo);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 var(--espaco-lateral);
+  background: linear-gradient(180deg, rgba(20, 13, 7, 0.85) 0%, rgba(20, 13, 7, 0) 100%);
+  z-index: 90;
+}
+
+.topo__logo {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  font-size: 1.35rem;
+  line-height: 1.05;
+  color: var(--cor-dourado);
+}
+
+.topo__logo-sub {
+  font-family: var(--fonte-texto);
+  font-weight: 500;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+
+/* =========================================================
+   5. BOTÕES
+   ========================================================= */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;  /* tamanho confortável pro dedo no celular */
+  padding: 14px 26px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--cor-dourado), var(--cor-ambar));
+  color: var(--cor-fundo);
+  font-family: var(--fonte-texto);
+  font-weight: 700;
+  font-size: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.botao:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(217, 138, 43, 0.35);
+}
+
+.botao--pequeno {
+  min-height: 40px;
+  padding: 8px 18px;
+  font-size: 0.9rem;
+}
+
+.botao__icone {
+  width: 20px;
+  height: 20px;
+}
+
+
+/* =========================================================
+   6. CENAS (as 4 telas da história)
+   ========================================================= */
+.cena {
+  position: relative;  /* serve de "moldura" pro vídeo e pra sombra */
+  height: 100vh;       /* altura da tela (navegadores antigos) */
+  height: 100svh;      /* altura da tela no celular, sem pular com a barra do navegador */
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;  /* texto fica na parte de baixo da tela */
+  padding: 0 var(--espaco-lateral) 14vh;
+  background-color: var(--cor-fundo);
+}
+
+/* Vídeo de fundo ocupando a tela toda */
+.cena__video {
+  position: absolute;
+  inset: 0;  /* encosta nos 4 cantos */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* preenche sem distorcer (corta as sobras) */
+  z-index: 0;
+}
+
+/* Camada escura por cima do vídeo, pro texto ficar legível */
+.cena__sombra {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 13, 7, 0.55) 0%,
+    rgba(20, 13, 7, 0.1) 35%,
+    rgba(20, 13, 7, 0.88) 100%
+  );
+  z-index: 1;
+}
+
+/* Bloco de texto (fica por cima de tudo) */
+.cena__texto {
+  position: relative;
+  z-index: 2;
+  max-width: 34rem;
+}
+
+.cena__etapa {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cor-dourado);
+}
+
+/* Tracinho decorativo antes da etapa */
+.cena__etapa::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background-color: var(--cor-dourado);
+}
+
+.cena__titulo {
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  font-size: clamp(2.3rem, 10.5vw, 3.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin-bottom: 14px;
+  text-wrap: balance;
+}
+
+.cena__descricao {
+  font-size: 1.05rem;
+  color: var(--cor-texto-suave);
+  max-width: 30rem;
+}
+
+/* Aviso "Role para descobrir" (só na cena 1) */
+.cena__rolar {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+  white-space: nowrap;
+}
+
+.cena__rolar::after {
+  content: "";
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(180deg, var(--cor-dourado), rgba(240, 192, 99, 0));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cena__rolar::after {
+    animation: pingar 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes pingar {
+  0%   { transform: scaleY(0); transform-origin: top; }
+  50%  { transform: scaleY(1); transform-origin: top; }
+  51%  { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+
+/* =========================================================
+   7. CENAS SEM VÍDEO
+   Quando o vídeo não carrega, o script coloca a classe
+   "sem-video" na cena. Aí escondemos o vídeo e mostramos
+   um degradê diferente pra cada cena.
+   ========================================================= */
+.cena.sem-video .cena__video {
+  display: none;
+}
+
+.cena--1.sem-video { background: var(--degrade-cena-1); }
+.cena--2.sem-video { background: var(--degrade-cena-2); }
+.cena--3.sem-video { background: var(--degrade-cena-3); }
+.cena--4.sem-video { background: var(--degrade-cena-4); }
+
+
+/* =========================================================
+   8. TÍTULOS DAS SEÇÕES (cervejas e contato)
+   ========================================================= */
+.secao__cabecalho {
+  margin-bottom: 32px;
+}
+
+.secao__etiqueta {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cor-dourado);
+}
+
+.secao__titulo {
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  font-size: clamp(2rem, 8.5vw, 2.6rem);
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+
+/* =========================================================
+   9. NOSSAS CERVEJAS (cards)
+   ========================================================= */
+.cervejas {
+  padding: 88px var(--espaco-lateral);
+  background-color: var(--cor-fundo-claro);
+  scroll-margin-top: var(--altura-topo);
+}
+
+.cervejas__lista {
+  display: grid;
+  grid-template-columns: 1fr;  /* no celular: um card embaixo do outro */
+  gap: 18px;
+}
+
+.cerveja {
+  /* Cor do "copinho" do card. Cada variação abaixo troca essa cor. */
+  --cor-cerveja: var(--cor-ambar);
+
+  padding: 26px 24px 28px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background-color: var(--cor-cartao);
+}
+
+.cerveja--clara  { --cor-cerveja: #f2c24e; }
+.cerveja--ambar  { --cor-cerveja: #c8741e; }
+.cerveja--escura { --cor-cerveja: #2b160b; }
+
+/* Desenho simples de um copo com espuma, feito só com CSS */
+.cerveja__copo {
+  width: 44px;
+  height: 60px;
+  margin-bottom: 20px;
+  border-top: 10px solid #fff1d6;  /* espuma */
+  border-radius: 4px 4px 12px 12px;
+  background: linear-gradient(180deg, var(--cor-cerveja), color-mix(in srgb, var(--cor-cerveja) 70%, #000));
+  box-shadow: 0 0 0 1px rgba(255, 241, 214, 0.25);
+}
+
+.cerveja__estilo {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cor-dourado);
+}
+
+.cerveja__nome {
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  font-size: 1.8rem;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+
+.cerveja__descricao {
+  color: var(--cor-texto-suave);
+}
+
+
+/* =========================================================
+   10. CONTATO
+   ========================================================= */
+.contato {
+  padding: 88px var(--espaco-lateral) 96px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(217, 138, 43, 0.18) 0%, rgba(217, 138, 43, 0) 60%),
+    var(--cor-fundo);
+  scroll-margin-top: var(--altura-topo);
+}
+
+.contato__bloco {
+  max-width: 34rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.contato__texto {
+  margin: 14px 0 28px;
+  color: var(--cor-texto-suave);
+}
+
+.botao--whatsapp {
+  width: 100%;  /* no celular, botão largo, fácil de tocar */
+}
+
+.contato__infos {
+  list-style: none;
+  margin-top: 32px;
+  display: grid;
+  gap: 14px;
+  color: var(--cor-texto-suave);
+}
+
+.contato__infos strong {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--cor-dourado);
+}
+
+
+/* =========================================================
+   11. RODAPÉ
+   ========================================================= */
+.rodape {
+  padding: 36px var(--espaco-lateral) 44px;
+  border-top: 1px solid var(--cor-borda);
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.rodape__marca {
+  margin-bottom: 6px;
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--cor-dourado);
+}
+
+.rodape__aviso {
+  margin-top: 12px;
+  font-weight: 700;
+  color: var(--cor-texto);
+}
+
+
+/* =========================================================
+   12. TELAS MAIORES (tablet e computador)
+   Tudo acima foi pensado pro celular. Aqui só ajustamos
+   o que muda quando a tela é mais larga.
+   ========================================================= */
+
+/* Tablet (a partir de 768px de largura) */
+@media (min-width: 768px) {
+  :root {
+    --espaco-lateral: 48px;
+    --altura-topo: 76px;
+  }
+
+  .topo__logo {
+    font-size: 1.6rem;
+  }
+
+  .cena {
+    align-items: center;  /* texto vai pro meio da altura */
+    padding-bottom: 0;
+  }
+
+  .cena__titulo {
+    font-size: clamp(3.2rem, 6vw, 4.6rem);
+  }
+
+  .cena__descricao {
+    font-size: 1.15rem;
+  }
+
+  .cena__sombra {
+    /* escurece mais o lado esquerdo, onde fica o texto */
+    background: linear-gradient(
+      90deg,
+      rgba(20, 13, 7, 0.85) 0%,
+      rgba(20, 13, 7, 0.35) 55%,
+      rgba(20, 13, 7, 0.1) 100%
+    );
+  }
+
+  .cervejas,
+  .contato {
+    padding-top: 120px;
+    padding-bottom: 120px;
+  }
+
+  .cervejas__lista {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .botao--whatsapp {
+    width: auto;
+  }
+}
+
+/* Computador (a partir de 1100px de largura) */
+@media (min-width: 1100px) {
+  :root {
+    --espaco-lateral: max(64px, calc((100vw - 1200px) / 2));
+  }
+
+  .cervejas__lista {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .secao__titulo {
+    font-size: 3rem;
+  }
+}

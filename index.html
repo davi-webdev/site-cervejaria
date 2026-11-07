@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- =====================================================
+       CABEÇA DA PÁGINA: informações que não aparecem na tela,
+       mas que o navegador e o Google usam.
+       ===================================================== -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Correnteza · Cervejaria Artesanal</title>
+  <meta name="description" content="Correnteza, cervejaria artesanal fictícia. Do campo de cevada ao copo gelado: conheça nossa história e nossas cervejas.">
+  <meta name="theme-color" content="#140d07">
+
+  <!-- Fontes do Google Fonts: Fraunces (títulos) e DM Sans (textos) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@600;800&display=swap" rel="stylesheet">
+
+  <!-- Nosso arquivo de estilo (cores, fontes, layout) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- =====================================================
+       BARRA DE PROGRESSO (o script do Davi controla a largura)
+       ===================================================== -->
+  <div class="progresso" aria-hidden="true">
+    <div class="progresso__barra"></div>
+  </div>
+
+  <!-- =====================================================
+       TOPO: logo + botão "Fazer pedido"
+       ===================================================== -->
+  <header class="topo">
+    <a href="#inicio" class="topo__logo">
+      Correnteza
+      <span class="topo__logo-sub">Cervejaria Artesanal</span>
+    </a>
+    <a href="#contato" class="botao botao--pequeno">Fazer pedido</a>
+  </header>
+
+  <main>
+
+    <!-- =====================================================
+         CENA 1: O CAMPO DE CEVADA
+         ===================================================== -->
+    <section class="cena cena--1" id="inicio">
+      <video class="cena__video" src="midia/cena1-cevada.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="cena__sombra"></div>
+      <div class="cena__texto">
+        <span class="cena__etapa">01 · O campo</span>
+        <h1 class="cena__titulo">Toda cerveja começa no campo.</h1>
+        <p class="cena__descricao">A cevada cresce devagar, no ritmo do sol e da chuva. É dela que vem a alma de cada gole.</p>
+      </div>
+      <span class="cena__rolar" aria-hidden="true">Role para descobrir</span>
+    </section>
+
+    <!-- =====================================================
+         CENA 2: A BRASSAGEM
+         ===================================================== -->
+    <section class="cena cena--2">
+      <video class="cena__video" src="midia/cena2-brassagem.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="cena__sombra"></div>
+      <div class="cena__texto">
+        <span class="cena__etapa">02 · A brassagem</span>
+        <h2 class="cena__titulo">Fogo, malte e paciência.</h2>
+        <p class="cena__descricao">O grão moído encontra a água quente e libera seus açúcares. A cervejaria inteira cheira a pão e caramelo.</p>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         CENA 3: A FERMENTAÇÃO
+         ===================================================== -->
+    <section class="cena cena--3">
+      <video class="cena__video" src="midia/cena3-fermentacao.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="cena__sombra"></div>
+      <div class="cena__texto">
+        <span class="cena__etapa">03 · A fermentação</span>
+        <h2 class="cena__titulo">O tempo trabalha em silêncio.</h2>
+        <p class="cena__descricao">Nos tanques, as leveduras transformam açúcar em sabor e borbulhas. Aqui, ninguém tem pressa.</p>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         CENA 4: O COPO GELADO
+         ===================================================== -->
+    <section class="cena cena--4">
+      <video class="cena__video" src="midia/cena4-copo.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="cena__sombra"></div>
+      <div class="cena__texto">
+        <span class="cena__etapa">04 · O copo</span>
+        <h2 class="cena__titulo">Gelada, do jeito certo.</h2>
+        <p class="cena__descricao">Dourada, espuma firme, gotas escorrendo pelo vidro. Valeu cada dia de espera.</p>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         NOSSAS CERVEJAS (3 cards que "surgem" na tela)
+         ===================================================== -->
+    <section class="cervejas" id="cervejas">
+      <div class="secao__cabecalho">
+        <span class="secao__etiqueta">Nossos rótulos</span>
+        <h2 class="secao__titulo">Três cervejas, um mesmo rio.</h2>
+      </div>
+
+      <div class="cervejas__lista">
+
+        <article class="cerveja cerveja--clara surgir">
+          <div class="cerveja__copo" aria-hidden="true"></div>
+          <span class="cerveja__estilo">Witbier · 4,8%</span>
+          <h3 class="cerveja__nome">Remanso</h3>
+          <p class="cerveja__descricao">Leve e cítrica, com casca de laranja e coentro. Feita para tardes de calor.</p>
+        </article>
+
+        <article class="cerveja cerveja--ambar surgir">
+          <div class="cerveja__copo" aria-hidden="true"></div>
+          <span class="cerveja__estilo">American IPA · 6,5%</span>
+          <h3 class="cerveja__nome">Cheia</h3>
+          <p class="cerveja__descricao">Aromática e lupulada, com amargor que transborda. Notas de maracujá e pinho.</p>
+        </article>
+
+        <article class="cerveja cerveja--escura surgir">
+          <div class="cerveja__copo" aria-hidden="true"></div>
+          <span class="cerveja__estilo">Stout · 5,9%</span>
+          <h3 class="cerveja__nome">Foz</h3>
+          <p class="cerveja__descricao">Escura e cremosa, com café e cacau torrados. O fim do rio é sempre profundo.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         CONTATO (botão de WhatsApp)
+         ===================================================== -->
+    <section class="contato" id="contato">
+      <div class="contato__bloco surgir">
+        <span class="secao__etiqueta">Fale com a gente</span>
+        <h2 class="secao__titulo">Bora provar?</h2>
+        <p class="contato__texto">Faça seu pedido pelo WhatsApp ou venha conhecer nossa taproom.</p>
+
+        <!-- TROQUE 5500000000000 pelo número real: 55 + DDD + número, só números -->
+        <a class="botao botao--whatsapp" href="https://wa.me/5500000000000?text=Ol%C3%A1!%20Quero%20fazer%20um%20pedido." target="_blank" rel="noopener">
+          <svg class="botao__icone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.2 3.6c-.5.4-1.3.1-1.3-.6V16.3A2.5 2.5 0 0 1 4 13.5v-8Z" fill="currentColor"/>
+          </svg>
+          Chamar no WhatsApp
+        </a>
+
+        <ul class="contato__infos">
+          <li><strong>Endereço</strong> Rua da Correnteza, 100 · Centro</li>
+          <li><strong>Horário</strong> Quinta a sábado, das 17h às 23h</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =====================================================
+       RODAPÉ
+       ===================================================== -->
+  <footer class="rodape">
+    <p class="rodape__marca">Correnteza</p>
+    <p>Marca fictícia, criada para fins de portfólio.</p>
+    <p class="rodape__aviso">Beba com moderação. Venda proibida para menores de 18 anos.</p>
+  </footer>
+
+  <!-- =====================================================
+       SCRIPTS (nessa ordem! O último é o do Davi)
+       ===================================================== -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
