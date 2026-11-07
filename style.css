@@ -915,6 +915,26 @@ a {
   box-shadow: none;
 }
 
+
+/* botões de rota desativados (site de demonstração) */
+.botao--desativado {
+  opacity: 0.45;
+  cursor: not-allowed;
+  user-select: none;
+}
+
+.botao--desativado:hover {
+  transform: none;
+  background-color: transparent;
+}
+
+.contato__rotas-aviso {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  font-style: italic;
+  color: rgba(201, 181, 151, 0.75);
+}
+
 .contato__rotas {
   display: grid;
   gap: 10px;
@@ -979,12 +999,15 @@ a {
   z-index: 95;
   width: min(calc(100% - 2 * var(--espaco-lateral)), 520px);
   transform: translate(-50%, 140%);  /* escondida embaixo da tela */
-  transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  visibility: hidden;
+  transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2), visibility 0s linear 0.45s;
   pointer-events: none;
 }
 
 .pedido--visivel {
   transform: translate(-50%, 0);
+  visibility: visible;
+  transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2), visibility 0s;
   pointer-events: auto;
 }
 
@@ -1255,3 +1278,460 @@ a {
   .painel { align-items: center; }
   .painel__caixa { border-radius: 24px; padding: 28px 32px; }
 }
+
+
+/* =========================================================
+   23. LOGO (selo)
+   ========================================================= */
+.topo__logo {
+  flex-direction: row;   /* selo do lado do nome */
+  align-items: center;
+  gap: 10px;
+}
+
+.topo__marca {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+}
+
+/* botão do topo nunca quebra em duas linhas */
+.topo .botao--pequeno { white-space: nowrap; flex-shrink: 0; }
+
+/* celular estreito: selo e nome um pouco menores */
+@media (max-width: 420px) {
+  .topo__selo { width: 34px; height: 34px; }
+  .topo__logo { gap: 8px; font-size: 1.2rem; }
+  .topo__logo-sub { letter-spacing: 0.12em; font-size: 0.6rem; }
+}
+
+.topo__selo {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+  transition: transform 0.4s ease;
+}
+
+.topo__logo:hover .topo__selo {
+  transform: rotate(-12deg);
+}
+
+.rodape__selo {
+  display: block;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 12px;
+}
+
+
+/* =========================================================
+   24. PERGUNTA DOS 18 ANOS
+   ========================================================= */
+.idade { display: none; }
+
+.pedir-idade,
+.pedir-idade body { overflow: hidden; }
+
+.pedir-idade .idade {
+  position: fixed;
+  inset: 0;
+  z-index: 300;  /* acima até da abertura */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espaco-lateral);
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(217, 138, 43, 0.18) 0%, rgba(217, 138, 43, 0) 60%),
+    var(--cor-fundo);
+  transition: opacity 0.4s ease;
+}
+
+.idade--saindo { opacity: 0; }
+
+.idade__caixa {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.idade__selo {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 12px 30px rgba(217, 138, 43, 0.25));
+}
+
+.idade__titulo {
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  font-size: 1.9rem;
+  line-height: 1.15;
+  color: var(--cor-dourado);
+}
+
+.idade__pergunta {
+  margin: 12px 0 26px;
+  color: var(--cor-texto-suave);
+}
+
+.idade__botoes {
+  display: grid;
+  gap: 10px;
+}
+
+.idade__botoes[hidden] { display: none; }
+
+.idade__nota {
+  margin-top: 22px;
+  font-size: 0.75rem;
+  color: rgba(201, 181, 151, 0.7);
+}
+
+
+/* =========================================================
+   25. NOSSA HISTÓRIA
+   ========================================================= */
+.historia {
+  position: relative;
+  z-index: 5;          /* tampa a emenda com o palco, igual às cervejas */
+  margin-top: -3px;
+  padding: 88px var(--espaco-lateral) 72px;
+  background-color: var(--cor-fundo-claro);
+  scroll-margin-top: var(--altura-topo);
+}
+
+/* a seção das cervejas agora vem depois da história, então não precisa mais sobrepor */
+.historia + .cervejas { margin-top: 0; }
+
+.historia__grade {
+  display: grid;
+  gap: 40px;
+  align-items: center;
+}
+
+.historia__selo-aviso {
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 5px 12px;
+  border: 1px dashed rgba(240, 192, 99, 0.5);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--cor-dourado);
+}
+
+.historia__texto p {
+  margin-top: 16px;
+  color: var(--cor-texto-suave);
+  max-width: 38rem;
+}
+
+.historia__texto em {
+  font-style: italic;
+  color: var(--cor-texto);
+}
+
+.linha-do-tempo {
+  list-style: none;
+  margin-top: 30px;
+  border-left: 2px solid var(--cor-marrom);
+}
+
+.linha-do-tempo li {
+  position: relative;
+  padding: 0 0 18px 22px;
+  color: var(--cor-texto-suave);
+}
+
+.linha-do-tempo li:last-child { padding-bottom: 0; }
+
+/* bolinha dourada em cada ano */
+.linha-do-tempo li::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--cor-dourado);
+  background-color: var(--cor-fundo-claro);
+}
+
+.linha-do-tempo strong {
+  display: block;
+  font-family: var(--fonte-titulo);
+  font-size: 1.3rem;
+  line-height: 1.2;
+  color: var(--cor-dourado);
+}
+
+.historia__logo {
+  display: flex;
+  justify-content: center;
+}
+
+.historia__selo {
+  width: min(260px, 70vw);
+  height: auto;
+  filter: drop-shadow(0 24px 50px rgba(0, 0, 0, 0.5));
+}
+
+/* o anel com o texto gira bem devagar, tipo um selo de rótulo */
+.selo__anel {
+  transform-box: view-box;
+  transform-origin: 100px 100px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .selo__anel { animation: girar 40s linear infinite; }
+}
+
+@keyframes girar { to { transform: rotate(360deg); } }
+
+.historia__aviso {
+  max-width: 46rem;
+  margin: 48px auto 0;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.25);
+  font-size: 0.85rem;
+  text-align: center;
+  color: var(--cor-texto-suave);
+}
+
+.historia__aviso strong { color: var(--cor-dourado); }
+
+
+/* =========================================================
+   26. COPINHO DO CARD QUE ENCHE CONFORME O PEDIDO
+   O script muda --enchimento (0 = vazio, 1 = cheio).
+   ========================================================= */
+.cerveja__copo {
+  --enchimento: 0;
+  --espuma: 0;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba(255, 241, 214, 0.45);
+  border-top-width: 0;
+  border-radius: 3px 3px 12px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: none;
+  transform-origin: 50% 100%;
+}
+
+/* As partes do copinho (o script coloca elas dentro do .cerveja__copo) */
+.cerveja__copo::before,
+.cerveja__copo::after { content: none; }
+
+/* o chope: sobe suave, sem "mola" */
+.copo__chope {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--enchimento) * 100%);
+  background:
+    radial-gradient(circle at 30% 70%, rgba(255, 241, 214, 0.55) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 70% 40%, rgba(255, 241, 214, 0.45) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 50% 90%, rgba(255, 241, 214, 0.4) 0 0.8px, transparent 1.4px),
+    linear-gradient(180deg, var(--cor-cerveja), color-mix(in srgb, var(--cor-cerveja) 70%, #000));
+  background-size: 14px 18px, 16px 22px, 12px 14px, 100% 100%;
+  transition: height 0.9s cubic-bezier(0.25, 0.8, 0.3, 1);
+}
+
+/* a espuma: fica sempre em cima do chope, com bordinha fofa */
+.copo__espuma {
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  height: 10px;
+  bottom: calc(var(--enchimento) * 100% - 4px);
+  border-radius: 6px 6px 3px 3px;
+  background:
+    radial-gradient(circle at 20% 30%, #fffaf0 0 3px, transparent 3.5px),
+    radial-gradient(circle at 55% 20%, #fffaf0 0 3.5px, transparent 4px),
+    radial-gradient(circle at 85% 35%, #fffaf0 0 2.8px, transparent 3.3px),
+    #fff1d6;
+  opacity: var(--espuma);
+  transform: scaleY(calc(0.4 + var(--espuma) * 0.6));
+  transform-origin: 50% 100%;
+  transition: bottom 0.9s cubic-bezier(0.25, 0.8, 0.3, 1), opacity 0.4s ease, transform 0.5s ease;
+}
+
+/* o jatinho que cai da "torneira" quando adiciona uma cerveja */
+.copo__jato {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  width: 4px;
+  height: calc((1 - var(--enchimento)) * 100% + 4px);  /* vai do topo até o chope */
+  margin-left: -2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--cor-cerveja) 80%, #fff), var(--cor-cerveja));
+  transform: scaleY(0);
+  transform-origin: 50% 0%;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .copo--servindo .copo__jato {
+    animation: servir 0.9s ease forwards;
+  }
+  /* a espuma "cresce" um pouquinho enquanto o chope cai */
+  .copo--servindo .copo__espuma {
+    animation: espumar 0.9s ease;
+  }
+}
+
+@keyframes servir {
+  0%   { transform: scaleY(0); opacity: 1; transform-origin: 50% 0%; }
+  25%  { transform: scaleY(1); opacity: 1; transform-origin: 50% 0%; }
+  70%  { transform: scaleY(1); opacity: 1; transform-origin: 50% 100%; }
+  100% { transform: scaleY(0); opacity: 1; transform-origin: 50% 100%; }
+}
+
+@keyframes espumar {
+  40% { height: 13px; }
+}
+
+/* =========================================================
+   27. AJUSTES DAS PARTES NOVAS EM TELAS MAIORES
+   ========================================================= */
+@media (min-width: 768px) {
+  .historia { padding-top: 120px; padding-bottom: 96px; }
+  .historia__grade { grid-template-columns: 1.3fr 1fr; gap: 64px; }
+  .historia__selo { width: 300px; }
+  .idade__botoes { grid-template-columns: 1fr 1fr; }
+}
+
+
+/* =========================================================
+   28. ABAS DO CARDÁPIO
+   ========================================================= */
+.abas {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 26px;
+  padding: 5px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  background-color: rgba(0, 0, 0, 0.25);
+  overflow-x: auto;            /* se não couber, rola pro lado */
+  scrollbar-width: none;
+}
+
+.abas::-webkit-scrollbar { display: none; }
+
+.abas__botao {
+  flex: 1 0 auto;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--cor-texto-suave);
+  font-family: var(--fonte-texto);
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.abas__botao:hover { color: var(--cor-texto); }
+
+.abas__botao[aria-selected="true"] {
+  background: linear-gradient(135deg, var(--cor-dourado), var(--cor-ambar));
+  color: var(--cor-fundo);
+}
+
+/* painel que acabou de aparecer entra suave */
+@media (prefers-reduced-motion: no-preference) {
+  .cardapio__painel--entrando .produto,
+  .cardapio__painel--entrando .cerveja {
+    animation: entrarCard 0.45s ease both;
+  }
+  .cardapio__painel--entrando .cerveja:nth-child(2) { animation-delay: 0.06s; }
+  .cardapio__painel--entrando .cerveja:nth-child(3) { animation-delay: 0.12s; }
+  .cardapio__painel--entrando .cerveja:nth-child(4) { animation-delay: 0.18s; }
+}
+
+@keyframes entrarCard {
+  from { opacity: 0; transform: translateY(14px); }
+}
+
+/* ícone dos produtos que não são cerveja (mesmo tamanho do copinho) */
+.produto__icone {
+  display: block;
+  width: 44px;
+  height: 60px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .abas {
+    display: inline-flex;
+    margin-bottom: 32px;
+  }
+  .abas__botao { flex: 0 0 auto; padding: 10px 26px; }
+  .cervejas__lista--4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1100px) {
+  .cervejas__lista--4 { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+}
+
+/* =========================================================
+   29. OPÇÕES DO GROWLER (Remanso, Cheia, Foz)
+   ========================================================= */
+.variantes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.variantes__opcao {
+  min-height: 36px;
+  padding: 6px 14px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  background: none;
+  color: var(--cor-texto-suave);
+  font-family: var(--fonte-texto);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.variantes__opcao:hover { color: var(--cor-texto); }
+
+.variantes__opcao[aria-checked="true"] {
+  border-color: var(--cor-dourado);
+  background-color: rgba(240, 192, 99, 0.12);
+  color: var(--cor-dourado);
+}
+
+/* o preço do growler muda pelo script; ele fica do tamanho normal */
+.cerveja__preco .cerveja__preco-valor { font-size: inherit; }
+
+/* =========================================================
+   30. LINHA DE CONTA (economia e preço por litro)
+   O texto é calculado pelo script a partir dos preços.
+   ========================================================= */
+.cerveja__compra { flex-wrap: wrap; }
+
+.cerveja__conta {
+  order: 3;              /* vai pra linha de baixo, ocupando a largura toda */
+  flex: 1 0 100%;
+  margin-top: -2px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #9fd3a8;        /* verdinho: cor de "economia" */
+}
+
+.cerveja__conta:empty { display: none; }

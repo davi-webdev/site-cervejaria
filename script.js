@@ -14,6 +14,41 @@ const videos = cenas.map(function (cena) {
   return cena.querySelector(".cena__video");
 });
 
+/* ----------------------------------------------------------
+   0. VOCÊ TEM 18 ANOS?
+   Se a pessoa ainda não confirmou, o <head> já colocou a
+   classe "pedir-idade" e a pergunta aparece na frente de tudo.
+   A abertura do copo só começa depois do "Sim".
+   ---------------------------------------------------------- */
+const idadeConfirmada = new Promise(function (resolver) {
+  const caixa = document.querySelector(".idade");
+  if (!raiz.classList.contains("pedir-idade") || !caixa) {
+    raiz.classList.remove("pedir-idade");
+    return resolver();
+  }
+
+  const sim = caixa.querySelector('[data-idade="sim"]');
+  const nao = caixa.querySelector('[data-idade="nao"]');
+  setTimeout(function () { sim.focus(); }, 100);
+
+  sim.addEventListener("click", function () {
+    try { localStorage.setItem("feierabend-18", String(Date.now())); } catch (e) {}
+    caixa.classList.add("idade--saindo");
+    setTimeout(function () {
+      raiz.classList.remove("pedir-idade");
+      resolver();
+      // rede de segurança da abertura (igual à do <head>)
+      setTimeout(function () { raiz.classList.add("abertura-saiu"); }, 9000);
+    }, 400);
+  });
+
+  nao.addEventListener("click", function () {
+    caixa.querySelector("[data-idade-texto]").textContent =
+      "Então ainda não é hora do seu Feierabend. Volte quando tiver 18! 😉";
+    caixa.querySelector("[data-idade-botoes]").hidden = true;
+  });
+});
+
 // Sempre começa do topo (senão o navegador volta pra onde a pessoa parou)
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 
@@ -450,7 +485,9 @@ function iniciar() {
 
       const contador = { valor: 0 };
 
-      const enchendo = gsap.timeline({ onUpdate: desenhar });
+      // a timeline começa pausada e só toca depois da confirmação de idade
+      const enchendo = gsap.timeline({ paused: true, onUpdate: desenhar });
+      idadeConfirmada.then(function () { enchendo.play(); });
       enchendo
         // Copo entra de cima, já inclinado
         .to(d, { queda: 0, duration: 0.6, ease: "back.out(1.6)" }, 0)
@@ -544,6 +581,9 @@ function iniciar() {
 const LOJA = {
   // WhatsApp da cervejaria: 55 + DDD + número, só números
   whatsapp: "5500000000000",
+  // Fuso horário da cervejaria: o "aberto/fechado" usa o relógio
+  // DELA, não o de quem está visitando o site
+  fuso: "America/Sao_Paulo",
   // Dias abertos: 0 = domingo, 1 = segunda ... 6 = sábado
   diasAbertos: [4, 5, 6],
   abre: 17,   // hora que abre
@@ -552,38 +592,69 @@ const LOJA = {
 
 const NOMES_DOS_DIAS = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
 
-function emReais(valor) {
-  return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+/* DINHEIRO EM CENTAVOS
+   Todo valor é guardado como número inteiro de centavos
+   (R$ 16,00 vira 1600). Computador erra conta com vírgula
+   (0,1 + 0,2 dá 0,30000000000000004), mas com inteiro não erra. */
+function paraCentavos(texto) {
+  return Math.round(parseFloat(String(texto).replace(",", ".")) * 100);
+}
+
+function emReais(centavos) {
+  return (centavos / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
 
 /* ----------------------------------------------------------
    10a. ABERTO AGORA / FECHADO
-   Calcula pelo relógio de quem está vendo o site e atualiza
-   a cada minuto.
    ---------------------------------------------------------- */
+
+// Que dia da semana e que horas são AGORA na cervejaria
+function agoraNaLoja(data) {
+  data = data || new Date();
+  try {
+    const partes = new Intl.DateTimeFormat("en-US", {
+      timeZone: LOJA.fuso,
+      weekday: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23"
+    }).formatToParts(data);
+    const pega = function (tipo) {
+      return partes.find(function (p) { return p.type === tipo; }).value;
+    };
+    const dias = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+    return {
+      dia: dias[pega("weekday")],
+      minutos: (parseInt(pega("hour"), 10) % 24) * 60 + parseInt(pega("minute"), 10)
+    };
+  } catch (e) {
+    // navegador muito antigo: usa o relógio do aparelho mesmo
+    return { dia: data.getDay(), minutos: data.getHours() * 60 + data.getMinutes() };
+  }
+}
+
+// agora = { dia: 0 a 6, minutos: minutos desde a meia-noite }
 function calcularStatus(agora) {
-  const dia = agora.getDay();
-  const minutosAgora = agora.getHours() * 60 + agora.getMinutes();
   const abreMin = LOJA.abre * 60;
   const fechaMin = LOJA.fecha * 60;
-  const abertoHoje = LOJA.diasAbertos.indexOf(dia) !== -1;
+  const abertoHoje = LOJA.diasAbertos.indexOf(agora.dia) !== -1;
 
-  if (abertoHoje && minutosAgora >= abreMin && minutosAgora < fechaMin) {
-    const faltam = fechaMin - minutosAgora;
+  if (abertoHoje && agora.minutos >= abreMin && agora.minutos < fechaMin) {
+    const faltam = fechaMin - agora.minutos;
     if (faltam <= 60) {
       return { tipo: "fechando", texto: "Aberto · fecha em " + faltam + " min" };
     }
     return { tipo: "aberto", texto: "Aberto agora · até " + LOJA.fecha + "h" };
   }
 
-  if (abertoHoje && minutosAgora < abreMin) {
+  if (abertoHoje && agora.minutos < abreMin) {
     return { tipo: "fechado", texto: "Fechado · abre hoje às " + LOJA.abre + "h" };
   }
 
   // procura o próximo dia aberto
   for (let i = 1; i <= 7; i++) {
-    const proximo = (dia + i) % 7;
+    const proximo = (agora.dia + i) % 7;
     if (LOJA.diasAbertos.indexOf(proximo) !== -1) {
       const quando = i === 1 ? "amanhã" : NOMES_DOS_DIAS[proximo];
       return { tipo: "fechado", texto: "Fechado · abre " + quando + " às " + LOJA.abre + "h" };
@@ -593,7 +664,7 @@ function calcularStatus(agora) {
 }
 
 function atualizarStatus() {
-  const status = calcularStatus(new Date());
+  const status = calcularStatus(agoraNaLoja());
   document.querySelectorAll("[data-status]").forEach(function (el) {
     el.textContent = status.texto;
     el.classList.remove("status--aberto", "status--fechando", "status--fechado");
@@ -611,7 +682,7 @@ setInterval(atualizarStatus, 60 * 1000);
 (function marcarEventoDeHoje() {
   const eventos = Array.from(document.querySelectorAll(".evento[data-dia]"));
   if (eventos.length === 0) return;
-  const hoje = new Date().getDay();
+  const hoje = agoraNaLoja().dia;
 
   // distância em dias até cada evento (0 = hoje)
   let melhor = null;
@@ -648,27 +719,125 @@ setInterval(atualizarStatus, 60 * 1000);
   const campoEndereco = painel.querySelector("[data-campo-endereco]");
   const botaoDaBarra = barra.querySelector(".pedido__barra");
 
-  // o pedido: { "Remanso": { preco: 16, qtd: 2 }, ... }
+  /* Cada produto da página é um "grupo". Produto com opções
+     (growler e barril) tem um item por rótulo dentro do grupo.
+     pedido = { "Remanso": { preco: 1600, qtd: 2 }, "Growler · Cheia": {...} }
+     (preço em centavos) */
   const pedido = {};
-  compras.forEach(function (c) {
-    pedido[c.dataset.produto] = { preco: parseFloat(c.dataset.preco), qtd: 0 };
+  const grupoDaChave = {};
+
+  const grupos = compras.map(function (c) {
+    const card = c.closest(".cerveja");
+    const opcoes = Array.from(card.querySelectorAll("[data-variante]"));
+    const grupo = {
+      compra: c,
+      card: card,
+      nome: c.dataset.produto,
+      opcoes: opcoes,
+      escolha: null,
+      chaves: [],
+      // data-limite no HTML muda o máximo. Vale pro produto inteiro,
+      // somando os rótulos (ex.: no máximo 3 barris no total)
+      limite: parseInt(c.dataset.limite, 10) || 20
+    };
+    if (opcoes.length) {
+      opcoes.forEach(function (o) {
+        const k = grupo.nome + " · " + o.dataset.variante;
+        pedido[k] = { preco: paraCentavos(o.dataset.preco), qtd: 0 };
+        grupo.chaves.push(k);
+      });
+      const marcada = opcoes.find(function (o) { return o.getAttribute("aria-checked") === "true"; }) || opcoes[0];
+      grupo.escolha = marcada.dataset.variante;
+    } else {
+      pedido[grupo.nome] = { preco: paraCentavos(c.dataset.preco), qtd: 0 };
+      grupo.chaves.push(grupo.nome);
+    }
+    grupo.chaves.forEach(function (k) { grupoDaChave[k] = grupo; });
+    return grupo;
   });
+
+  function chaveAtual(g) {
+    return g.opcoes.length ? g.nome + " · " + g.escolha : g.nome;
+  }
+
+  function qtdDoGrupo(g) {
+    return g.chaves.reduce(function (soma, k) { return soma + pedido[k].qtd; }, 0);
+  }
+
+  // preço da garrafa avulsa de um rótulo (pra calcular economia)
+  function precoDaGarrafa(rotulo) {
+    return pedido[rotulo] ? pedido[rotulo].preco : null;
+  }
 
   function totais() {
     let itens = 0;
-    let valor = 0;
-    Object.keys(pedido).forEach(function (nome) {
-      itens += pedido[nome].qtd;
-      valor += pedido[nome].qtd * pedido[nome].preco;
+    let valor = 0; // centavos
+    Object.keys(pedido).forEach(function (k) {
+      itens += pedido[k].qtd;
+      valor += pedido[k].qtd * pedido[k].preco;
     });
     return { itens: itens, valor: valor };
   }
 
-  function mudar(nome, quanto) {
-    const item = pedido[nome];
-    item.qtd = Math.max(0, Math.min(99, item.qtd + quanto));
+  /* LINHA DE CONTA embaixo do preço (growler, kit, caixa, barril).
+     É sempre CALCULADA a partir dos preços da página, nunca
+     escrita na mão. Se um dia o preço do combo ficar mais caro
+     que o avulso, a linha some sozinha em vez de mentir. */
+  function textoDaConta(g) {
+    const c = g.compra;
+    const preco = pedido[chaveAtual(g)].preco;
+    let base = null;
+    let comparacao = "";
+
+    if (c.dataset.compararGarrafas) {
+      // growler: N garrafas de 500 ml do rótulo escolhido
+      const n = parseInt(c.dataset.compararGarrafas, 10);
+      const garrafa = precoDaGarrafa(g.escolha);
+      if (garrafa !== null) { base = garrafa * n; comparacao = n + " garrafas"; }
+    } else if (c.dataset.combo) {
+      // kit e caixa: soma das garrafas que vêm dentro
+      const precos = c.dataset.combo.split(",").map(function (s) { return precoDaGarrafa(s.trim()); });
+      if (precos.every(function (p) { return p !== null; })) {
+        base = precos.reduce(function (a, b) { return a + b; }, 0);
+        comparacao = "Separadas";
+      }
+    } else if (c.dataset.litros) {
+      // barril: quanto sai o litro
+      return emReais(Math.round(preco / parseFloat(c.dataset.litros))) + " o litro";
+    }
+
+    if (base === null) return "";
+    const economia = base - preco;
+    if (economia <= 0) {
+      console.warn("Atenção: " + chaveAtual(g) + " não está mais barato que " + comparacao + ".");
+      return "";
+    }
+    return comparacao + ": " + emReais(base) + " · economia de " + emReais(economia);
+  }
+
+  // monta o copinho das cervejas: chope, espuma e o jato que cai quando adiciona
+  grupos.forEach(function (g) {
+    const copo = g.card.querySelector(".cerveja__copo");
+    if (copo) copo.innerHTML = '<span class="copo__jato"></span><span class="copo__chope"></span><span class="copo__espuma"></span>';
+  });
+
+  function mudar(chave, quanto) {
+    const item = pedido[chave];
+    const g = grupoDaChave[chave];
+    if (!item || !g) return;
+    if (quanto > 0 && qtdDoGrupo(g) >= g.limite) return; // chegou no máximo
+    const novo = Math.max(0, item.qtd + quanto);
+    if (novo === item.qtd) return;
+    item.qtd = novo;
     desenhar();
     if (quanto > 0) {
+      // jatinho de chope no copo do card
+      const copo = g.card.querySelector(".cerveja__copo");
+      if (copo) {
+        copo.classList.remove("copo--servindo");
+        void copo.offsetWidth; // reinicia a animação
+        copo.classList.add("copo--servindo");
+      }
       barra.classList.remove("pedido--pulou");
       void barra.offsetWidth; // reinicia a animação do pulinho
       barra.classList.add("pedido--pulou");
@@ -679,11 +848,46 @@ setInterval(atualizarStatus, 60 * 1000);
     const t = totais();
 
     // cards
-    compras.forEach(function (c) {
-      const item = pedido[c.dataset.produto];
+    grupos.forEach(function (g) {
+      const c = g.compra;
+      const item = pedido[chaveAtual(g)];
+      const noGrupo = qtdDoGrupo(g);
+
+      if (g.opcoes.length) {
+        // marca a opção escolhida e mostra quanto já tem de cada rótulo (ex.: "Cheia · 2")
+        g.opcoes.forEach(function (o) {
+          const escolhida = o.dataset.variante === g.escolha;
+          const qtdOpcao = pedido[g.nome + " · " + o.dataset.variante].qtd;
+          o.setAttribute("aria-checked", escolhida ? "true" : "false");
+          o.tabIndex = escolhida ? 0 : -1;
+          o.textContent = o.dataset.variante + (qtdOpcao > 0 ? " · " + qtdOpcao : "");
+        });
+        // preço do rótulo escolhido: reais e centavos separados
+        const reais = Math.floor(item.preco / 100);
+        const centavos = item.preco % 100;
+        const precoTexto = c.querySelector("[data-preco-texto]");
+        const precoCentavos = c.querySelector("[data-preco-centavos]");
+        if (precoTexto) precoTexto.textContent = "R$ " + reais.toLocaleString("pt-BR");
+        if (precoCentavos) precoCentavos.textContent = "," + String(centavos).padStart(2, "0");
+        c.querySelector('[data-acao="mais"]').setAttribute("aria-label", "Adicionar " + g.nome + " de " + g.escolha);
+        c.querySelector('[data-acao="menos"]').setAttribute("aria-label", "Tirar " + g.nome + " de " + g.escolha);
+      }
+
+      const conta = c.querySelector("[data-conta]");
+      if (conta) conta.textContent = textoDaConta(g);
+
       c.querySelector(".quantidade__numero").textContent = item.qtd;
       c.querySelector('[data-acao="menos"]').disabled = item.qtd === 0;
-      c.closest(".cerveja").classList.toggle("cerveja--no-pedido", item.qtd > 0);
+      c.querySelector('[data-acao="mais"]').disabled = noGrupo >= g.limite;
+      g.card.classList.toggle("cerveja--no-pedido", noGrupo > 0);
+
+      // copinho: 1 = metade, 2 = quase cheio, 3 ou mais = cheio
+      const copo = g.card.querySelector(".cerveja__copo");
+      if (copo) {
+        const niveis = [0, 0.5, 0.7, 0.85];
+        copo.style.setProperty("--enchimento", item.qtd >= niveis.length ? 0.85 : niveis[item.qtd]);
+        copo.style.setProperty("--espuma", item.qtd > 0 ? 1 : 0);
+      }
     });
 
     // barra
@@ -699,6 +903,7 @@ setInterval(atualizarStatus, 60 * 1000);
     Object.keys(pedido).forEach(function (nome) {
       const item = pedido[nome];
       if (item.qtd === 0) return;
+      const g = grupoDaChave[nome];
       const li = document.createElement("li");
       li.className = "painel__item";
 
@@ -718,6 +923,7 @@ setInterval(atualizarStatus, 60 * 1000);
       const botoes = qtd.querySelectorAll("button");
       botoes[0].addEventListener("click", function () { mudar(nome, -1); });
       botoes[1].addEventListener("click", function () { mudar(nome, 1); });
+      botoes[1].disabled = qtdDoGrupo(g) >= g.limite;
 
       const valor = document.createElement("span");
       valor.className = "painel__item-valor";
@@ -729,12 +935,28 @@ setInterval(atualizarStatus, 60 * 1000);
     vazio.hidden = t.itens > 0;
   }
 
+  // opções de rótulo (growler e barril): clique e setinhas do teclado
+  grupos.forEach(function (g) {
+    g.opcoes.forEach(function (o, i) {
+      o.addEventListener("click", function () {
+        g.escolha = o.dataset.variante;
+        desenhar();
+      });
+      o.addEventListener("keydown", function (e) {
+        let alvo = null;
+        if (e.key === "ArrowRight" || e.key === "ArrowDown") alvo = g.opcoes[(i + 1) % g.opcoes.length];
+        if (e.key === "ArrowLeft" || e.key === "ArrowUp") alvo = g.opcoes[(i - 1 + g.opcoes.length) % g.opcoes.length];
+        if (alvo) { e.preventDefault(); alvo.click(); alvo.focus(); }
+      });
+    });
+  });
+
   // botões + e − dos cards
-  compras.forEach(function (c) {
-    c.addEventListener("click", function (e) {
+  grupos.forEach(function (g) {
+    g.compra.addEventListener("click", function (e) {
       const botao = e.target.closest("[data-acao]");
       if (!botao) return;
-      mudar(c.dataset.produto, botao.dataset.acao === "mais" ? 1 : -1);
+      mudar(chaveAtual(g), botao.dataset.acao === "mais" ? 1 : -1);
     });
   });
 
@@ -838,4 +1060,47 @@ setInterval(atualizarStatus, 60 * 1000);
   });
 
   desenhar();
+})();
+
+
+
+/* ----------------------------------------------------------
+   10d. ABAS DO CARDÁPIO
+   Clique troca a categoria; setinhas do teclado também.
+   ---------------------------------------------------------- */
+(function abas() {
+  const lista = document.querySelector(".abas");
+  if (!lista) return;
+  const botoes = Array.from(lista.querySelectorAll('[role="tab"]'));
+
+  function escolher(botao, focar) {
+    botoes.forEach(function (b) {
+      const ativo = b === botao;
+      b.setAttribute("aria-selected", ativo ? "true" : "false");
+      b.tabIndex = ativo ? 0 : -1;
+      const painel = document.getElementById(b.getAttribute("aria-controls"));
+      if (!painel) return;
+      painel.hidden = !ativo;
+      if (ativo) {
+        painel.classList.remove("cardapio__painel--entrando");
+        void painel.offsetWidth; // reinicia a animação de entrada
+        painel.classList.add("cardapio__painel--entrando");
+      }
+    });
+    if (focar) botao.focus();
+    // a altura da página mudou: avisa o ScrollTrigger pra recalcular
+    if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh();
+  }
+
+  botoes.forEach(function (botao, i) {
+    botao.addEventListener("click", function () { escolher(botao, false); });
+    botao.addEventListener("keydown", function (e) {
+      let alvo = null;
+      if (e.key === "ArrowRight") alvo = botoes[(i + 1) % botoes.length];
+      if (e.key === "ArrowLeft") alvo = botoes[(i - 1 + botoes.length) % botoes.length];
+      if (e.key === "Home") alvo = botoes[0];
+      if (e.key === "End") alvo = botoes[botoes.length - 1];
+      if (alvo) { e.preventDefault(); escolher(alvo, true); }
+    });
+  });
 })();

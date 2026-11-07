@@ -31,13 +31,72 @@
        Se em 9 segundos nada tirar a abertura, ela some sozinha. -->
   <script>
     document.documentElement.classList.add("js");
-    setTimeout(function () { document.documentElement.classList.add("abertura-saiu"); }, 9000);
+    // Já confirmou que tem 18+ antes? Senão, mostra a pergunta
+    var jaConfirmou = false;
+    try { jaConfirmou = !!localStorage.getItem("feierabend-18"); } catch (e) {}
+    if (!jaConfirmou) {
+      document.documentElement.classList.add("pedir-idade");
+    } else {
+      setTimeout(function () { document.documentElement.classList.add("abertura-saiu"); }, 9000);
+    }
   </script>
 
   <!-- Nosso arquivo de estilo (cores, fontes, layout) -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- O LOGO (selo) fica guardado aqui uma vez só e é
+       reaproveitado no topo, na pergunta de idade e no rodapé -->
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+    <defs>
+      <symbol id="selo" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="96" fill="#140d07" stroke="#f0c063" stroke-width="2.5"/>
+        <circle cx="100" cy="100" r="89" fill="none" stroke="rgba(240, 192, 99, 0.45)" stroke-width="1"/>
+        <circle cx="100" cy="100" r="58" fill="none" stroke="#f0c063" stroke-width="1.5"/>
+        <path id="selo-p-cima" d="M 32 100 A 68 68 0 0 1 168 100" fill="none"/>
+        <path id="selo-p-baixo" d="M 22 100 A 78 78 0 0 0 178 100" fill="none"/>
+        <g>
+          <text fill="#f0c063" font-family="Fraunces, Georgia, serif" font-weight="800" font-size="21" letter-spacing="3">
+            <textPath href="#selo-p-cima" startOffset="50%" text-anchor="middle">FEIERABEND</textPath>
+          </text>
+          <text fill="#c9b597" font-family="DM Sans, system-ui, sans-serif" font-weight="700" font-size="10" letter-spacing="3.2">
+            <textPath href="#selo-p-baixo" startOffset="50%" text-anchor="middle">BRAUEREI · DESDE 2019</textPath>
+          </text>
+          <circle cx="16" cy="100" r="2.2" fill="#f0c063"/>
+          <circle cx="184" cy="100" r="2.2" fill="#f0c063"/>
+        </g>
+        <!-- ramo de cevada no centro -->
+        <g fill="#f0c063">
+          <path d="M100 140 L100 66" stroke="#f0c063" stroke-width="2" stroke-linecap="round"/>
+          <ellipse cx="100" cy="64" rx="3.6" ry="7.5"/>
+          <ellipse cx="94" cy="78" rx="3.6" ry="7.5" transform="rotate(-28 94 78)"/>
+          <ellipse cx="106" cy="78" rx="3.6" ry="7.5" transform="rotate(28 106 78)"/>
+          <ellipse cx="94" cy="93" rx="3.6" ry="7.5" transform="rotate(-28 94 93)"/>
+          <ellipse cx="106" cy="93" rx="3.6" ry="7.5" transform="rotate(28 106 93)"/>
+          <ellipse cx="94" cy="108" rx="3.6" ry="7.5" transform="rotate(-28 94 108)"/>
+          <ellipse cx="106" cy="108" rx="3.6" ry="7.5" transform="rotate(28 106 108)"/>
+          <path d="M100 124 C 92 118 86 122 84 128 M100 124 C 108 118 114 122 116 128" fill="none" stroke="#f0c063" stroke-width="1.6" stroke-linecap="round"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- =====================================================
+       VOCÊ TEM 18 ANOS? (aparece antes de tudo, uma vez)
+       ===================================================== -->
+  <div class="idade" role="dialog" aria-modal="true" aria-labelledby="idade-titulo">
+    <div class="idade__caixa">
+      <svg class="idade__selo" aria-hidden="true"><use href="#selo"/></svg>
+      <h2 class="idade__titulo" id="idade-titulo">Bem-vindo à Feierabend</h2>
+      <p class="idade__pergunta" data-idade-texto>Este site fala de cerveja. Você tem 18 anos ou mais?</p>
+      <div class="idade__botoes" data-idade-botoes>
+        <button type="button" class="botao" data-idade="sim">Sim, tenho 18+</button>
+        <button type="button" class="botao botao--contorno" data-idade="nao">Ainda não</button>
+      </div>
+      <p class="idade__nota">Marca fictícia, criada para portfólio.</p>
+    </div>
+  </div>
 
   <!-- =====================================================
        ABERTURA: copo enchendo de chope (o script controla)
@@ -132,9 +191,12 @@
        TOPO: logo + botão "Fazer pedido"
        ===================================================== -->
   <header class="topo">
-    <a href="#inicio" class="topo__logo">
-      Feierabend
-      <span class="topo__logo-sub">Cervejaria Artesanal</span>
+    <a href="#inicio" class="topo__logo" aria-label="Feierabend, cervejaria artesanal: voltar ao início">
+      <svg class="topo__selo" aria-hidden="true"><use href="#selo"/></svg>
+      <span class="topo__marca">
+        Feierabend
+        <span class="topo__logo-sub">Cervejaria Artesanal</span>
+      </span>
     </a>
     <div class="topo__direita">
       <span class="status status--topo" data-status></span>
@@ -198,14 +260,81 @@
     </section>
 
     <!-- =====================================================
+         NOSSA HISTÓRIA (inventada, só pra portfólio)
+         ===================================================== -->
+    <section class="historia" id="historia">
+      <div class="historia__grade">
+        <div class="historia__texto">
+          <span class="secao__etiqueta">Nossa história</span>
+          <span class="historia__selo-aviso">História fictícia · criada para portfólio</span>
+          <h2 class="secao__titulo">Feierabend: a hora em que o trabalho acaba e a cerveja começa.</h2>
+          <p>Em alemão, <em>Feierabend</em> é aquele momento sagrado do fim do expediente. A ferramenta volta pra caixa, o crachá sai do pescoço e a primeira cerveja do dia chega na mesa.</p>
+          <p>A Feierabend nasceu (na nossa imaginação) numa garagem do Vale do Itajaí: três amigos, uma panela de 40 litros e a teimosia de fazer cerveja do jeito que os avós alemães faziam. A primeira leva deu errado. A segunda também. A terceira virou a Remanso.</p>
+          <p>Hoje a taproom abre só de quinta a sábado. Cerveja boa não tem pressa, e quem trabalha a semana inteira merece o seu Feierabend.</p>
+
+          <ol class="linha-do-tempo">
+            <li class="surgir"><strong>2019</strong> Uma garagem, uma panela e três amigos teimosos.</li>
+            <li class="surgir"><strong>2021</strong> A terceira leva finalmente dá certo: nasce a Remanso.</li>
+            <li class="surgir"><strong>2023</strong> Abre a taproom no Centro, de quinta a sábado.</li>
+          </ol>
+        </div>
+
+        <div class="historia__logo surgir" aria-hidden="true">
+          <svg class="historia__selo" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="96" fill="#140d07" stroke="#f0c063" stroke-width="2.5"/>
+        <circle cx="100" cy="100" r="89" fill="none" stroke="rgba(240, 192, 99, 0.45)" stroke-width="1"/>
+        <circle cx="100" cy="100" r="58" fill="none" stroke="#f0c063" stroke-width="1.5"/>
+        <path id="selo-g-cima" d="M 32 100 A 68 68 0 0 1 168 100" fill="none"/>
+        <path id="selo-g-baixo" d="M 22 100 A 78 78 0 0 0 178 100" fill="none"/>
+        <g class="selo__anel">
+          <text fill="#f0c063" font-family="Fraunces, Georgia, serif" font-weight="800" font-size="21" letter-spacing="3">
+            <textPath href="#selo-g-cima" startOffset="50%" text-anchor="middle">FEIERABEND</textPath>
+          </text>
+          <text fill="#c9b597" font-family="DM Sans, system-ui, sans-serif" font-weight="700" font-size="10" letter-spacing="3.2">
+            <textPath href="#selo-g-baixo" startOffset="50%" text-anchor="middle">BRAUEREI · DESDE 2019</textPath>
+          </text>
+          <circle cx="16" cy="100" r="2.2" fill="#f0c063"/>
+          <circle cx="184" cy="100" r="2.2" fill="#f0c063"/>
+        </g>
+        <!-- ramo de cevada no centro -->
+        <g fill="#f0c063">
+          <path d="M100 140 L100 66" stroke="#f0c063" stroke-width="2" stroke-linecap="round"/>
+          <ellipse cx="100" cy="64" rx="3.6" ry="7.5"/>
+          <ellipse cx="94" cy="78" rx="3.6" ry="7.5" transform="rotate(-28 94 78)"/>
+          <ellipse cx="106" cy="78" rx="3.6" ry="7.5" transform="rotate(28 106 78)"/>
+          <ellipse cx="94" cy="93" rx="3.6" ry="7.5" transform="rotate(-28 94 93)"/>
+          <ellipse cx="106" cy="93" rx="3.6" ry="7.5" transform="rotate(28 106 93)"/>
+          <ellipse cx="94" cy="108" rx="3.6" ry="7.5" transform="rotate(-28 94 108)"/>
+          <ellipse cx="106" cy="108" rx="3.6" ry="7.5" transform="rotate(28 106 108)"/>
+          <path d="M100 124 C 92 118 86 122 84 128 M100 124 C 108 118 114 122 116 128" fill="none" stroke="#f0c063" stroke-width="1.6" stroke-linecap="round"/>
+        </g>
+          </svg>
+        </div>
+      </div>
+
+      <p class="historia__aviso">
+        <strong>Aviso:</strong> a Feierabend, seus fundadores e essa história foram inventados.
+        Este site é um projeto de portfólio criado por Davi Tavares.
+      </p>
+    </section>
+
+    <!-- =====================================================
          NOSSAS CERVEJAS (3 cards que "surgem" na tela)
          ===================================================== -->
     <section class="cervejas" id="cervejas">
       <div class="secao__cabecalho">
-        <span class="secao__etiqueta">Nossos rótulos</span>
+        <span class="secao__etiqueta">Cardápio</span>
         <h2 class="secao__titulo">Três cervejas, um mesmo rio.</h2>
       </div>
 
+      <!-- ABAS do cardápio (o script troca qual painel aparece) -->
+      <div class="abas" role="tablist" aria-label="Categorias do cardápio">
+        <button type="button" class="abas__botao" role="tab" id="aba-cervejas" aria-selected="true" aria-controls="painel-cervejas">Cervejas</button>
+        <button type="button" class="abas__botao" role="tab" id="aba-levar" aria-selected="false" aria-controls="painel-levar" tabindex="-1">Pra levar</button>
+        <button type="button" class="abas__botao" role="tab" id="aba-petiscos" aria-selected="false" aria-controls="painel-petiscos" tabindex="-1">Petiscos</button>
+      </div>
+
+      <div class="cardapio__painel" role="tabpanel" id="painel-cervejas" aria-labelledby="aba-cervejas">
       <div class="cervejas__lista">
 
         <article class="cerveja cerveja--clara surgir">
@@ -253,6 +382,190 @@
           </div>
         </article>
 
+      </div>
+      </div>
+
+      <div class="cardapio__painel" role="tabpanel" id="painel-levar" aria-labelledby="aba-levar" hidden>
+        <div class="cervejas__lista cervejas__lista--4">
+        <article class="cerveja produto">
+          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
+              <path d="M33 26c7 0 7 13 0 13" fill="none" stroke="rgba(255,241,214,0.55)" stroke-width="2.5" stroke-linecap="round"/>
+              <rect x="13" y="30" width="18" height="23" rx="3" fill="#c8741e"/>
+              <rect x="13" y="27" width="18" height="5" rx="2" fill="#fff1d6"/>
+              <path d="M17 5h10v7c0 3 6 5 6 12v28a4 4 0 0 1-4 4H15a4 4 0 0 1-4-4V24c0-7 6-9 6-12Z" fill="none" stroke="rgba(255,241,214,0.6)" stroke-width="2"/>
+              <rect x="16" y="2" width="12" height="5" rx="1.5" fill="#6b4423"/>
+            </svg>
+          <span class="cerveja__estilo">Refil · 1 litro</span>
+          <h3 class="cerveja__nome">Growler</h3>
+          <p class="cerveja__descricao">Garrafa retornável de 1 litro, enchida na hora direto da torneira. Sai mais barato que levar 2 garrafas de 500 ml.</p>
+          <!-- cada opção tem o preço dela. A linha de economia embaixo
+               do preço é CALCULADA pelo script (2 garrafas x preço da garrafa) -->
+          <div class="variantes" role="radiogroup" aria-label="Escolha o rótulo do growler">
+            <button type="button" class="variantes__opcao" role="radio" aria-checked="true" data-variante="Remanso" data-preco="29">Remanso</button>
+            <button type="button" class="variantes__opcao" role="radio" aria-checked="false" data-variante="Cheia" data-preco="40" tabindex="-1">Cheia</button>
+            <button type="button" class="variantes__opcao" role="radio" aria-checked="false" data-variante="Foz" data-preco="36" tabindex="-1">Foz</button>
+          </div>
+          <div class="cerveja__compra" data-produto="Growler" data-preco="29" data-variantes data-comparar-garrafas="2">
+            <p class="cerveja__preco"><span class="cerveja__preco-valor" data-preco-texto>R$ 29</span><span data-preco-centavos>,00</span> <small>1 litro</small></p>
+            <p class="cerveja__conta" data-conta></p>
+            <div class="quantidade">
+              <button type="button" class="quantidade__botao" data-acao="menos" aria-label="Tirar um Growler do pedido">&minus;</button>
+              <span class="quantidade__numero" aria-live="polite">0</span>
+              <button type="button" class="quantidade__botao" data-acao="mais" aria-label="Adicionar um Growler ao pedido">+</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="cerveja produto">
+          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
+              <rect x="7" y="10" width="4" height="10" rx="1" fill="#6b4423"/><rect x="4" y="19" width="10" height="34" rx="3" fill="#f2c24e"/>
+              <rect x="20" y="6" width="4" height="10" rx="1" fill="#6b4423"/><rect x="17" y="15" width="10" height="38" rx="3" fill="#c8741e"/>
+              <rect x="33" y="10" width="4" height="10" rx="1" fill="#6b4423"/><rect x="30" y="19" width="10" height="34" rx="3" fill="#2b160b" stroke="rgba(255,241,214,0.35)"/>
+              <rect x="2" y="44" width="40" height="13" rx="2" fill="#6b4423"/>
+            </svg>
+          <span class="cerveja__estilo">Presente · 3 garrafas</span>
+          <h3 class="cerveja__nome">Kit degustação</h3>
+          <p class="cerveja__descricao">Uma Remanso, uma Cheia e uma Foz numa caixinha de madeira. Sai mais barato que comprar as três separadas.</p>
+          <!-- data-combo: o que vem dentro. O script soma o preço avulso e mostra a economia -->
+          <div class="cerveja__compra" data-produto="Kit degustação" data-preco="52" data-combo="Remanso,Cheia,Foz">
+            <p class="cerveja__preco">R$ 52<span>,00</span> <small>caixinha com 3</small></p>
+            <p class="cerveja__conta" data-conta></p>
+            <div class="quantidade">
+              <button type="button" class="quantidade__botao" data-acao="menos" aria-label="Tirar um Kit degustação do pedido">&minus;</button>
+              <span class="quantidade__numero" aria-live="polite">0</span>
+              <button type="button" class="quantidade__botao" data-acao="mais" aria-label="Adicionar um Kit degustação ao pedido">+</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="cerveja produto">
+          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
+              <rect x="9" y="10" width="5" height="16" rx="1.5" fill="#c8741e"/><rect x="19.5" y="8" width="5" height="18" rx="1.5" fill="#f2c24e"/><rect x="30" y="10" width="5" height="16" rx="1.5" fill="#c8741e"/>
+              <rect x="3" y="24" width="38" height="31" rx="3" fill="#6b4423" stroke="rgba(255,241,214,0.4)"/>
+              <path d="M3 32h38" stroke="rgba(255,241,214,0.3)"/>
+              <text x="22" y="47" fill="#f0c063" font-family="DM Sans, sans-serif" font-weight="700" font-size="11" text-anchor="middle">6x</text>
+            </svg>
+          <span class="cerveja__estilo">Mix · 6 garrafas</span>
+          <h3 class="cerveja__nome">Caixa com 6</h3>
+          <p class="cerveja__descricao">Duas de cada rótulo, mais barato que comprar separado. Pra geladeira nunca ficar vazia no fim de semana.</p>
+          <div class="cerveja__compra" data-produto="Caixa com 6" data-preco="99" data-combo="Remanso,Remanso,Cheia,Cheia,Foz,Foz">
+            <p class="cerveja__preco">R$ 99<span>,00</span> <small>6 garrafas 500 ml</small></p>
+            <p class="cerveja__conta" data-conta></p>
+            <div class="quantidade">
+              <button type="button" class="quantidade__botao" data-acao="menos" aria-label="Tirar uma Caixa com 6 do pedido">&minus;</button>
+              <span class="quantidade__numero" aria-live="polite">0</span>
+              <button type="button" class="quantidade__botao" data-acao="mais" aria-label="Adicionar uma Caixa com 6 ao pedido">+</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="cerveja produto">
+          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
+              <path d="M10 6h24c5 9 5 39 0 48H10C5 45 5 15 10 6Z" fill="#6b4423" stroke="rgba(255,241,214,0.45)" stroke-width="1.5"/>
+              <path d="M7.5 16h29M6.5 30h31M7.5 44h29" stroke="#f0c063" stroke-width="2.5"/>
+              <path d="M17 6c-2 9-2 39 0 48M27 6c2 9 2 39 0 48" stroke="rgba(0,0,0,0.25)" stroke-width="1.2" fill="none"/>
+            </svg>
+          <span class="cerveja__estilo">Festa · 30 litros</span>
+          <h3 class="cerveja__nome">Barril 30 L</h3>
+          <p class="cerveja__descricao">Pra aniversário, churrasco e evento, com chopeira emprestada. Encomende com 3 dias de antecedência.</p>
+          <!-- preços por rótulo: 30 litros x preço do litro no barril
+               (Remanso R$ 23/L, Cheia R$ 32/L, Foz R$ 29/L) -->
+          <div class="variantes" role="radiogroup" aria-label="Escolha o rótulo do barril">
+            <button type="button" class="variantes__opcao" role="radio" aria-checked="true" data-variante="Remanso" data-preco="690">Remanso</button>
+            <button type="button" class="variantes__opcao" role="radio" aria-checked="false" data-variante="Cheia" data-preco="960" tabindex="-1">Cheia</button>
+            <button type="button" class="variantes__opcao" role="radio" aria-checked="false" data-variante="Foz" data-preco="870" tabindex="-1">Foz</button>
+          </div>
+          <div class="cerveja__compra" data-produto="Barril 30 L" data-preco="690" data-limite="3" data-variantes data-litros="30">
+            <p class="cerveja__preco"><span class="cerveja__preco-valor" data-preco-texto>R$ 690</span><span data-preco-centavos>,00</span> <small>chopeira inclusa</small></p>
+            <p class="cerveja__conta" data-conta></p>
+            <div class="quantidade">
+              <button type="button" class="quantidade__botao" data-acao="menos" aria-label="Tirar um Barril 30 L do pedido">&minus;</button>
+              <span class="quantidade__numero" aria-live="polite">0</span>
+              <button type="button" class="quantidade__botao" data-acao="mais" aria-label="Adicionar um Barril 30 L ao pedido">+</button>
+            </div>
+          </div>
+        </article>
+        </div>
+      </div>
+
+      <div class="cardapio__painel" role="tabpanel" id="painel-petiscos" aria-labelledby="aba-petiscos" hidden>
+        <div class="cervejas__lista cervejas__lista--4">
+        <article class="cerveja produto">
+          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
+              <path d="M22 46C10 46 5 36 10 28s15-6 12 6c-3-12 9-14 12-6s-1 18-12 18M14 44l16-16M30 44 14 28" fill="none" stroke="#b5651d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="16" cy="31" r="1" fill="#fff1d6"/><circle cx="28" cy="35" r="1" fill="#fff1d6"/><circle cx="22" cy="43" r="1" fill="#fff1d6"/>
+            </svg>
+          <span class="cerveja__estilo">Clássico alemão</span>
+          <h3 class="cerveja__nome">Pretzel</h3>
+          <p class="cerveja__descricao">Pretzel de verdade, quentinho e com sal grosso, acompanhado da mostarda escura da casa.</p>
+          <div class="cerveja__compra" data-produto="Pretzel" data-preco="24">
+            <p class="cerveja__preco">R$ 24<span>,00</span> <small>unidade grande</small></p>
+            <div class="quantidade">
+              <button type="button" class="quantidade__botao" data-acao="menos" aria-label="Tirar um Pretzel do pedido">&minus;</button>
+              <span class="quantidade__numero" aria-live="polite">0</span>
+              <button type="button" class="quantidade__botao" data-acao="mais" aria-label="Adicionar um Pretzel ao pedido">+</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="cerveja produto">
+          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
+              <ellipse cx="22" cy="50" rx="19" ry="5" fill="rgba(255,241,214,0.15)"/>
+              <circle cx="13" cy="42" r="8" fill="#d98a2b"/><circle cx="31" cy="42" r="8" fill="#c8741e"/><circle cx="22" cy="31" r="8" fill="#e09a3a"/>
+              <circle cx="10" cy="39" r="2" fill="rgba(255,241,214,0.45)"/><circle cx="28" cy="39" r="2" fill="rgba(255,241,214,0.4)"/><circle cx="19" cy="28" r="2" fill="rgba(255,241,214,0.5)"/>
+            </svg>
+          <span class="cerveja__estilo">Porção · 8 unidades</span>
+          <h3 class="cerveja__nome">Bolinho de queijo</h3>
+          <p class="cerveja__descricao">Casquinha crocante por fora e queijo derretendo por dentro. Some da mesa em minutos.</p>
+          <div class="cerveja__compra" data-produto="Bolinho de queijo" data-preco="28">
+            <p class="cerveja__preco">R$ 28<span>,00</span> <small>8 unidades</small></p>
+            <div class="quantidade">
+              <button type="button" class="quantidade__botao" data-acao="menos" aria-label="Tirar um Bolinho de queijo do pedido">&minus;</button>
+              <span class="quantidade__numero" aria-live="polite">0</span>
+              <button type="button" class="quantidade__botao" data-acao="mais" aria-label="Adicionar um Bolinho de queijo ao pedido">+</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="cerveja produto">
+          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
+              <ellipse cx="22" cy="50" rx="19" ry="5" fill="rgba(255,241,214,0.15)"/>
+              <path d="M8 42c5-15 22-20 29-9" fill="none" stroke="#8a3b1c" stroke-width="9" stroke-linecap="round"/>
+              <path d="M14 34l2 3M22 30l1 4M30 30l-1 4" stroke="rgba(255,241,214,0.4)" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          <span class="cerveja__estilo">Na chapa</span>
+          <h3 class="cerveja__nome">Linguiça artesanal</h3>
+          <p class="cerveja__descricao">Linguiça da região na chapa, com cebola caramelizada e pão pra acompanhar.</p>
+          <div class="cerveja__compra" data-produto="Linguiça artesanal" data-preco="36">
+            <p class="cerveja__preco">R$ 36<span>,00</span> <small>porção pra 2</small></p>
+            <div class="quantidade">
+              <button type="button" class="quantidade__botao" data-acao="menos" aria-label="Tirar uma Linguiça artesanal do pedido">&minus;</button>
+              <span class="quantidade__numero" aria-live="polite">0</span>
+              <button type="button" class="quantidade__botao" data-acao="mais" aria-label="Adicionar uma Linguiça artesanal ao pedido">+</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="cerveja produto">
+          <svg class="produto__icone" viewBox="0 0 44 60" aria-hidden="true">
+              <path d="M10 56 6 26h32l-4 30Z" fill="#6b4423" stroke="rgba(255,241,214,0.4)"/>
+              <rect x="10" y="12" width="6" height="22" rx="3" fill="#f2c24e" transform="rotate(-10 13 23)"/>
+              <rect x="19" y="8" width="6" height="24" rx="3" fill="#e9b441"/>
+              <rect x="28" y="12" width="6" height="22" rx="3" fill="#f2c24e" transform="rotate(10 31 23)"/>
+            </svg>
+          <span class="cerveja__estilo">Porção</span>
+          <h3 class="cerveja__nome">Batata rústica</h3>
+          <p class="cerveja__descricao">Batata com casca, alecrim e alho assado. Combina com qualquer um dos rótulos.</p>
+          <div class="cerveja__compra" data-produto="Batata rústica" data-preco="26">
+            <p class="cerveja__preco">R$ 26<span>,00</span> <small>porção pra 2</small></p>
+            <div class="quantidade">
+              <button type="button" class="quantidade__botao" data-acao="menos" aria-label="Tirar uma Batata rústica do pedido">&minus;</button>
+              <span class="quantidade__numero" aria-live="polite">0</span>
+              <button type="button" class="quantidade__botao" data-acao="mais" aria-label="Adicionar uma Batata rústica ao pedido">+</button>
+            </div>
+          </div>
+        </article>
+        </div>
       </div>
     </section>
 
@@ -310,11 +623,15 @@
           <li><strong>Horário</strong> Quinta a sábado, das 17h às 23h</li>
         </ul>
 
-        <!-- Como chegar: abre o app de mapa do celular -->
+        <!-- Como chegar: DESATIVADO, só demonstração.
+             No site de um cliente, vira um link com o endereço dele, assim:
+             Google Maps: https://www.google.com/maps/search/?api=1&amp;query=ENDERECO
+             Waze:        https://waze.com/ul?q=ENDERECO&amp;navigate=yes -->
         <div class="contato__rotas">
-          <a class="botao botao--contorno" href="https://www.google.com/maps/search/?api=1&amp;query=Centro%2C%20Blumenau%20-%20SC" target="_blank" rel="noopener">Abrir no Google Maps</a>
-          <a class="botao botao--contorno" href="https://waze.com/ul?q=Centro%2C%20Blumenau%20-%20SC&amp;navigate=yes" target="_blank" rel="noopener">Ir com o Waze</a>
+          <span class="botao botao--contorno botao--desativado" role="link" aria-disabled="true">Abrir no Google Maps</span>
+          <span class="botao botao--contorno botao--desativado" role="link" aria-disabled="true">Ir com o Waze</span>
         </div>
+        <p class="contato__rotas-aviso">Botões apenas demonstrativos. No site de um negócio real, eles abrem a rota direto até o endereço dele.</p>
       </div>
     </section>
 
@@ -343,6 +660,7 @@
        RODAPÉ
        ===================================================== -->
   <footer class="rodape">
+    <svg class="rodape__selo" aria-hidden="true"><use href="#selo"/></svg>
     <p class="rodape__marca">Feierabend</p>
     <p>Marca fictícia, criada para fins de portfólio.</p>
     <p class="rodape__aviso">Beba com moderação. Venda proibida para menores de 18 anos.</p>
@@ -369,7 +687,7 @@
       </div>
 
       <ul class="painel__itens" data-pedido-lista></ul>
-      <p class="painel__vazio" data-pedido-vazio>Escolha suas cervejas na seção <a href="#cervejas" data-fechar-pedido>Nossos rótulos</a>.</p>
+      <p class="painel__vazio" data-pedido-vazio>Escolha o que vai querer no <a href="#cervejas" data-fechar-pedido>cardápio</a>.</p>
 
       <div class="painel__total">
         <span>Total</span>
